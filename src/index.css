@@ -1,0 +1,84 @@
+@font-face {
+  font-family: Fonts;
+  src: url("./components/Fonts/Satoshi-Variable.ttf");
+}
+
+@import "tailwindcss";
+
+@theme{
+  --font-fonts: Fonts,"sans-serif"
+}
+
+@layer components {
+  /* border */
+  .bbb {
+    @apply border border-gray-400;
+  }
+
+  /* hover-effect */
+  .hover-effect {
+    @apply hover:scale-110 duration-200 cursor-pointer;
+  }
+
+  /* table border */
+  .t-bdr {
+    @apply border border-gray-400 px-4 py-2 text-center;
+  }
+  
+  /* Dashboard table */
+  .dt-bdr {
+    @apply border border-gray-400 px-1 py-0.5 text-center;
+  }
+
+  /* button style 1 */
+  .button-style-1 {
+    @apply rounded-md border border-gray-400 font-medium hover:scale-110 duration-200 cursor-pointer py-1 px-4;
+  }
+
+  /* button style 2 */
+  .button-style-2 {
+    @apply bg-blue-800 p-2 rounded-md font-medium hover:scale-110 duration-200 cursor-pointer;
+  }
+
+  /* popup overlay container */
+  .popup-outer {
+    @apply fixed inset-0 h-full w-full flex justify-center items-center bg-black/50;
+  }
+
+  /* popup content container */
+  .popup-inner {
+    @apply bg-black p-4 rounded-md flex flex-col gap-4 border border-gray-400;
+  }
+
+  /* input field */
+  .in-field {
+    @apply border border-gray-400 p-1 rounded-sm;
+  }
+
+  .parent-bg{
+    @apply bg-[#dee2eb]
+  }
+
+  .navbar-bg{
+    @apply bg-[#FFFFFF]
+  }
+  .card-bg{
+    @apply bg-[#FFFFFF]
+  }
+  .btn-bg{
+    @apply bg-[#692df5ee]
+  }
+  .heading-txt-color{
+    @apply text-[#292d31] font-bold
+  }
+  .txt-color{
+    @apply text-[#5c6369] font-semibold
+  }
+  .text-size{
+    @apply text-[12px]
+  }
+  .hover-effect-color{
+    @apply hover:bg-[#947CEF]
+ 
+  }
+}
