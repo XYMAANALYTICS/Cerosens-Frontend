@@ -41,6 +41,19 @@ const AscanPloting = ({ chartRef }) => {
     const allAmplitudes = Ascan_Datas.flatMap((d) =>
       d.As ? d.As.split(",").map((v) => parseFloat(v)) : []
     );
+  //    const hasInvalidValue = allAmplitudes.some(
+  //   (v) => isNaN(v) || String(v).includes("@")
+  // );
+
+  // if (hasInvalidValue) {
+  //   alert("⚠️ Invalid data detected (NaN or @). Please check sensor input!");
+  //   // Optionally clear chart
+  //   setState({
+  //     lineData: { labels: [], datasets: [] },
+  //     markers: [],
+  //   });
+  //   return;
+  // }
     const timestamps = Array.from(
       { length: allAmplitudes.length },
       (_, i) => i + 1
@@ -113,6 +126,7 @@ const AscanPloting = ({ chartRef }) => {
     }
 
     // 🚫 Limit to two clicks (4 markers max)
+    console.log("markers=",markers)
     const currentClickCount = markers.length / 2;
     if (currentClickCount === 1) {
       setState({ SaveTags: true });
