@@ -8,7 +8,7 @@ const AscanDropdown = () => {
   const getAscanList = useDataStore((s) => s.getAscanList);
   const resetState = useAdminStore((s) => s.resetState);
   const GetAscanList = useDataStore((s) => s.GetAscanList);
-  const setState = useAdminStore((s)=>s.setState)
+  const setState = useAdminStore((s) => s.setState);
   const ProcessName = useAdminStore((s) => s.ProcessName);
 
   useEffect(() => {
@@ -21,17 +21,22 @@ const AscanDropdown = () => {
   }, []);
 
   // ✅ Convert data to dropdown options
-  const options =
-    GetAscanList?.map((item) => item.ProcessName) || [];
+  const options = Array.from(
+    new Set(GetAscanList?.map((item) => item.ProcessName))
+  ).map((name) => ({
+    value: name,
+    label: name,
+  }));
 
   return (
     <div className="">
       <Dropdown
         options={options}
         value={ProcessName}
-        onChange={(val) => {resetState();
-          setState({Ascan:true,ProcessName: val.value});
-          console.log("Selected:", val.value)}}
+        onChange={(val) => {
+          resetState();
+          setState({ Ascan: true, ProcessName: val.value });
+        }}
         placeholder="Select Process"
         className="text-center"
       />

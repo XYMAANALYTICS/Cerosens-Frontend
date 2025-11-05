@@ -5,6 +5,65 @@ import {
   getLineChartOptions,
 } from "../../../utils/lineChartConfig";
 import useAdminStore from "../../../store/adminStore";
+import { getAscanLineChartOptions } from "../../../utils/ascanlinechart";
+import zoomPlugin from "chartjs-plugin-zoom";
+import annotationPlugin from "chartjs-plugin-annotation";
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  zoomPlugin,
+  annotationPlugin
+);
+
+// Hover grid lines plugin
+const gridHoverLine = {
+  id: "gridHoverLine",
+  beforeDraw(chart) {
+    const { ctx, chartArea } = chart;
+
+    if (!chart._active || chart._active.length === 0) return;
+
+    const mouseEvent = chart.tooltip;
+    const x = mouseEvent.caretX;
+    const y = chart._lastEvent?.y ?? mouseEvent.caretY;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeStyle = "#1D2B73";
+    ctx.lineWidth = 1.5;
+
+    ctx.moveTo(x, chartArea.top);
+    ctx.lineTo(x, chartArea.bottom);
+
+    ctx.moveTo(chartArea.left, y);
+    ctx.lineTo(chartArea.right, y);
+
+    ctx.stroke();
+    ctx.restore();
+  },
+};
+
+// Register custom plugin
+ChartJS.register(gridHoverLine);
 
 const AscanPloting = ({ chartRef }) => {
   const lineData = useAdminStore((s) => s.lineData);
@@ -14,9 +73,13 @@ const AscanPloting = ({ chartRef }) => {
   const Ascan_Datas = useAdminStore((s) => s.Ascan_Datas);
   const setState = useAdminStore((s) => s.setState);
   const SaveTags = useAdminStore((s) => s.SaveTags);
+  const start = useAdminStore((s) => s.start);
+  const stop = useAdminStore((s) => s.stop);
+  const zoomKey = useAdminStore((s) => s.zoomKey);
 
+  // console.log("zoom key", zoomKey)
 
-  console.log("ascan_status=",ascan_status)
+  // console.log("ascan_status=",ascan_status)
   // 🔁 Fetch ASCAN data periodically
   useEffect(() => {
     let intervalId;
@@ -25,9 +88,10 @@ const AscanPloting = ({ chartRef }) => {
         setAscan("GetAscan");
       }, 2000);
     } else if (ascan_status === false) {
+      // console.log("Clear everything");
       setState({
         lineData: { labels: [], datasets: [] },
-        markers: [],
+        // markers: [],
       });
     }
     return () => intervalId && clearInterval(intervalId);
@@ -39,31 +103,29 @@ const AscanPloting = ({ chartRef }) => {
     if (!Ascan_Datas || Ascan_Datas.length === 0) return;
 
     const allAmplitudes = Ascan_Datas.flatMap((d) =>
-      d.As ? d.As.split(",").map((v) => parseFloat(v)) : []
+      d.As ? d.As.split(",")
+  .map(v => v.trim())
+  .filter(v => v !== "" && !isNaN(v))
+  .map(Number)
+ : []
     );
-  //    const hasInvalidValue = allAmplitudes.some(
-  //   (v) => isNaN(v) || String(v).includes("@")
-  // );
 
-  // if (hasInvalidValue) {
-  //   alert("⚠️ Invalid data detected (NaN or @). Please check sensor input!");
-  //   // Optionally clear chart
-  //   setState({
-  //     lineData: { labels: [], datasets: [] },
-  //     markers: [],
-  //   });
-  //   return;
-  // }
-    const timestamps = Array.from(
-      { length: allAmplitudes.length },
-      (_, i) => i + 1
+    console.log("allAmplitudes=",allAmplitudes)  
+
+    const timestamps = Array.from({ length: allAmplitudes.length }, (_, i) =>
+      Number(
+        (
+          Number(start) +
+          (i * (Number(stop) - Number(start))) / (allAmplitudes.length - 1)
+        ).toFixed(3)
+      )
     );
 
     const datasets = [
       {
         label: "A-scan Signal",
         data: allAmplitudes,
-        borderColor: sensorColors[0],
+        borderColor: "#0037BD",
         backgroundColor: "rgba(28,193,255,0.1)",
         borderWidth: 2,
         pointRadius: 0,
@@ -76,12 +138,11 @@ const AscanPloting = ({ chartRef }) => {
     setState({ lineData: { labels: timestamps, datasets } });
   }, [Ascan_Datas, setState]);
 
-  const lineOptions = useMemo(() => getLineChartOptions(), []);
-
   // 🎯 Handle chart click (add/remove markers)
   const onChartClick = (event) => {
     if (!chartRef.current) return;
     const chart = chartRef.current;
+
     const points = chart.getElementsAtEventForMode(
       event,
       "nearest",
@@ -93,56 +154,132 @@ const AscanPloting = ({ chartRef }) => {
 
     const firstPoint = points[0];
     const datasetIndex = firstPoint.datasetIndex;
-    const label1 = lineData.labels[firstPoint.index];
-    const value1 = lineData.datasets[datasetIndex].data[firstPoint.index];
+    const clickedIndex = firstPoint.index;
 
-    const nextIndex =
-      firstPoint.index + 1 < lineData.labels.length
-        ? firstPoint.index + 1
-        : firstPoint.index;
-    const label2 = lineData.labels[nextIndex];
-    const value2 = lineData.datasets[datasetIndex].data[nextIndex];
-
+    // Declare meta
     const meta = chart.getDatasetMeta(datasetIndex);
-    const chartTop = chart.chartArea.top;
-    const chartBottom = chart.chartArea.bottom;
-    const x1 = meta.data[firstPoint.index].x;
-    const x2 =
-      meta.data[nextIndex] && meta.data[nextIndex].x
-        ? meta.data[nextIndex].x
-        : x1;
 
-    // 🧩 If same label already exists → remove that pair
-    const existingPairIndex = markers.findIndex(
-      (m) => m.label === label1 || m.label === label2
-    );
+    // console.log("labels=",lineData)
+    const label = lineData.labels[clickedIndex];
+    const value = lineData.datasets[datasetIndex].data[clickedIndex];
 
-    if (existingPairIndex !== -1) {
-      const filtered = markers.filter(
-        (m) => m.label !== label1 && m.label !== label2
-      );
-      setState({ markers: filtered });
+    // console.log("Clicked values=",value)
+    // Get pixel position
+    const positionX = meta.data[clickedIndex]?.x; // pixel from left
+    const positionY = meta.data[clickedIndex]?.y; // pixel from top
+
+    if (markers.length === 1) {
+      setState({ SaveTags: true });
+    }
+    if (markers.length > 2) {
+      const filteredMarkers = markers.filter((m) => m.label !== label);
+      setState({ markers: filteredMarkers });
       return;
     }
 
-    // 🚫 Limit to two clicks (4 markers max)
-    console.log("markers=",markers)
-    const currentClickCount = markers.length / 2;
-    if (currentClickCount === 1) {
-      setState({ SaveTags: true });
-    } else if (currentClickCount >= 2) {
+
+
+    // Limit to 2 markers
+    if (markers.length >= 2) {
       alert("⚠️ You can only select two points!");
       return;
     }
 
-    // ✅ Add new pair of markers
-    const newMarkers = [
-      ...markers,
-      { x: x1, label: label1, value: value1, chartTop, chartBottom },
-      { x: x2, label: label2, value: value2, chartTop, chartBottom },
-    ];
-    setState({ markers: newMarkers });
+    const newMarker = {
+      x: positionX,
+      y: positionY,
+      label: label,
+      value: value,
+    };
+    console.log("newMarker-", newMarker);
+
+    setState({ markers: [...markers, newMarker] });
   };
+
+  const lineOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false, labels: { color: "#FFFFFF" } },
+        tooltip: { enabled: true, titleColor: "#FFFFFF", bodyColor: "#FFFFFF" },
+        zoom: {
+          pan: { enabled: false, mode: "xy" },
+          pinch: { enabled: window.innerWidth >= 768 },
+          zoom: {
+            wheel: { enabled: false },
+            drag: {
+              enabled: true,
+              backgroundColor: "rgba(48, 71, 192, 0.2)",
+              borderColor: "#FF8282",
+              borderWidth: 1,
+            },
+            mode: "xy",
+          },
+          limits: {
+            x: { min: "original", max: "original" },
+            y: { min: "original", max: "original" },
+          },
+        },
+      },
+      interaction: { mode: "index", intersect: false },
+
+      scales: {
+        x: {
+          type: "linear",
+
+          grid: { color: "#858585" },
+          ticks: {
+            color: "#262626",
+            font: { size: window.innerWidth > 1536 ? 8 : 7 },
+          },
+        },
+        y: {
+          grid: { color: "#858585" },
+          ticks: {
+            color: "#262626",
+            font: { size: window.innerWidth > 1536 ? 8 : 7 },
+          },
+          beginAtZero: true,
+        },
+      },
+    }),
+    []
+  );
+
+  const [markerPixels, setMarkerPixels] = React.useState([]);
+
+  lineOptions.plugins.zoom.zoom.onZoom = ({ chart }) => {
+    const xScale = chart.scales.x;
+    const yScale = chart.scales.y;
+
+    const newPixels = markers.map((marker) => ({
+      ...marker,
+      xPixel: xScale.getPixelForValue(marker.label),
+      yPixel: yScale.getPixelForValue(marker.value),
+    }));
+
+    setMarkerPixels(newPixels);
+  };
+
+  useEffect(() => {
+    if (!chartRef.current || markers.length === 0) return;
+
+    const chart = chartRef.current;
+    const { x: xScale, y: yScale } = chart.scales;
+    if (!xScale || !yScale) return;
+
+    const newPixels = markers.map((marker) => ({
+      ...marker,
+      xPixel: xScale.getPixelForValue(marker.label),
+      yPixel: yScale.getPixelForValue(marker.value),
+    }));
+
+    setMarkerPixels(newPixels);
+  }, [chartRef.current, markers, lineData, zoomKey]);
+
+  // console.log("marker pixels", markerPixels)
 
   return (
     <div className="relative w-full h-full">
@@ -159,40 +296,51 @@ const AscanPloting = ({ chartRef }) => {
           {SaveTags && (
             <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
               <div className="bg-white p-4 rounded-xl shadow-lg flex flex-col items-center justify-center text-center">
-                <div className="mb-2">
-                Do You Want to Save the Settings?
-
-                </div>
+                <div className="mb-2">Do You Want to Save the Settings?</div>
                 <div className="flex gap-2">
-                <div className="px-2 border rounded-md border-green-400 text-green-400 hover:bg-green-400 hover:text-white hover-effect" onClick={()=>{setAscan("StoreTags");setState({SaveTags:false});}}>Yes</div>
-                <div className="px-2 border rounded-md border-red-400 text-red-400 hover:bg-red-400 hover:text-white hover-effect" onClick={()=>{setState({SaveTags:false})}}>No</div>
-
+                  <div
+                    className="px-2 border rounded-md border-green-400 text-green-400 hover:bg-green-400 hover:text-white hover-effect"
+                    onClick={() => {
+                      setAscan("StoreTags");
+                      setState({ SaveTags: true });
+                    }}
+                  >
+                    Yes
+                  </div>
+                  <div
+                    className="px-2 border rounded-md border-red-400 text-red-400 hover:bg-red-400 hover:text-white hover-effect"
+                    onClick={() => {
+                      setState({ SaveTags: false });
+                    }}
+                  >
+                    No
+                  </div>
                 </div>
               </div>
             </div>
           )}
-          {/* 🧭 Markers */}
-          {markers.map((marker, idx) => (
+    
+          {markerPixels.map((marker, idx) => (
             <div
               key={idx}
               className="absolute"
               style={{
-                left: marker.x,
-                top: marker.chartTop,
-                height: marker.chartBottom - marker.chartTop,
-                borderLeft: "2px dotted rgba(59,130,246,0.9)",
+                left: marker.xPixel,
+                top: marker.yPixel,
+                height: 350,
+                borderLeft: "2px dotted rgba(250, 45, 5)",
                 pointerEvents: "none",
               }}
             >
               <div
-                className="absolute bg-green-500 w-[50px] text-white text-xs font-medium px-2 py-1 rounded-lg shadow-md"
+                className="absolute bg-green-500 w-[50px] text-white text-[8px] font-medium px-2 py-1 rounded-lg shadow-md"
                 style={{
                   left: "50%",
                   top: "-10px",
                   transform: "translate(-50%, -100%)",
                 }}
               >
-                X: {marker.label} <br /> Y: {marker.value}
+                X: {marker.label}
               </div>
             </div>
           ))}

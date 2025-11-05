@@ -23,7 +23,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="w-full h-[100%] navbar-bg">
+    <div className="w-full h-[100%] navbar-bg shadow">
       <div className="h-full w-full flex justify-between p-2">
         <img
           src={imageMap.xymaBlue}

@@ -5,6 +5,9 @@ import useAdminStore from "../../../store/adminStore";
 import AscanPloting from "./AscanPloting";
 import paramters from "../../../store/addparameter";
 import AscanDropdown from "./AscanDropdown";
+import { MdOutlineRestartAlt } from "react-icons/md";
+import { useState } from "react";
+import { CiLock } from "react-icons/ci";
 
 const Ascan = () => {
   const projectdata = useDataStore((s) => s.getprojectdata);
@@ -34,10 +37,10 @@ const Ascan = () => {
 
   // console.log("Deviceselect=", Deviceselect);
   return (
-    <div className="h-[90%] w-full p-4 flex gap-4">
+    <div className="h-[90%] w-full p-4 flex gap-4 ">
       {/* Sidebar / Form */}
       <form
-        className="w-[22%] bg-gray-800/80 rounded-xl shadow-lg flex flex-col overflow-hidden"
+        className="w-[22%] rounded-xl shadow flex flex-col overflow-hidden navbar-bg"
         onSubmit={(e) => {
           e.preventDefault();
           setSettingsDetails("GetSettings");
@@ -48,7 +51,7 @@ const Ascan = () => {
         }}
       >
         <div className="flex flex-col gap-1 p-2">
-          <label className="text-white font-medium">Device Name:</label>
+          <label className="text-gray-600 font-medium">Device Name:</label>
           <Dropdown
             options={ProjectName}
             value={UserProjectName}
@@ -74,13 +77,13 @@ const Ascan = () => {
             { label: "Stop", value: Stop, name: "Stop" },
           ].map((item) => (
             <div key={item.name} className="flex flex-col gap-1">
-              <label className="text-white font-medium">{item.label}</label>
+              <label className="text-gray-600  font-medium">{item.label}</label>
               <input
                 type="number"
                 value={item.value}
                 required
                 onChange={(e) => setState({ [item.name]: e.target.value })}
-                className="border border-gray-400 text-gray-300 rounded-md px-3 py-1 w-full text-center focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
+                className="border border-gray-400 text-gray-600  rounded-md px-3 py-1 w-full text-center focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-200"
               />
             </div>
           ))}
@@ -94,23 +97,42 @@ const Ascan = () => {
       </form>
 
       {/* Chart Section */}
-      <div className="w-[78%] h-[100%] bg-gray-900/80 rounded-xl shadow-lg flex flex-col overflow-hidden">
+      <div className="w-[78%] h-[100%] shadow navbar-bg rounded-xl flex flex-col overflow-hidden">
         {/* Chart Controls */}
-        <div className="h-[60px] w-full flex justify-end gap-2 p-2 border-b border-gray-700">
+        <div className="h-[60px] shadow w-full flex justify-end gap-2 p-2 border-gray-700">
           {/* {["Download", "Dropdown"].map((btn) => ( */}
-            <div
-              className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
-              // onClick={btn==="Dropdown"}
-            >
-              Download
-            </div>
-            <div
-              className=""
-            >
-              <AscanDropdown/>
-              
-            </div>
+           <div
+            className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
+            // onClick={btn==="Dropdown"}
+          >
+            <CiLock/>
+            Lock
+          </div>
+          <div
+            className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
+            // onClick={btn==="Dropdown"}
+          >
+            Download
+          </div>
+          <div className="">
+            <AscanDropdown />
+          </div>
           {/* ))} */}
+          <div
+            className="border border-green-500 text-green-500 px-3 py-1 rounded-md hover:bg-green-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
+            onClick={() => {
+              if (chartRef.current) {
+                chartRef.current.resetZoom();
+                setAscan("StoreTags")
+                setState((prev) => ({
+                  ...prev,
+                  zoomKey: prev.zoomKey + 1,
+                }));
+              }
+            }}
+          > 
+            <MdOutlineRestartAlt />
+          </div>
           <div
             className="border border-green-500 text-green-500 px-3 py-1 rounded-md hover:bg-green-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
             onClick={() => {
@@ -164,7 +186,7 @@ const Ascan = () => {
                 onClick={() => {
                   setState({ Ascan: true });
                   setAscan("StartAscan");
-                  DevicesetState({TrailNamePopup :false})
+                  DevicesetState({ TrailNamePopup: false });
                   resetState();
                 }}
               >

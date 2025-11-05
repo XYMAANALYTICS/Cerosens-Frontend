@@ -84,6 +84,7 @@ const useDataStore = create((set) => ({
    getAscanList: async () => {
     try{
       const response = await axiosInstance.get("/getAscanList");
+      // console.log("GetAscanList=", response.data.data)
       if (response.status === 200) {
         set({
           GetAscanList: response.data.data,

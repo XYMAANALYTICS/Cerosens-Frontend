@@ -58,11 +58,16 @@ const useAdminStore = create((set, get) => ({
   //Ascan settings:
   Ascan_btn: "",
   Ascan: false,
-  Ascan_Datas:[],
-  ProcessName:"",
-  SaveTags:false,
-  markers:[],
-  lineData:[{ labels: [], datasets: [] }],
+  Ascan_Datas: [],
+  ProcessName: "",
+  SaveTags: false,
+  markers: [],
+  lineData: [{ labels: [], datasets: [] }],
+  zoomKey: 0,
+
+  //ascan start stop positions
+  start:"",
+  stop:"",
 
   setState: (partial) => set(partial),
 
@@ -261,7 +266,8 @@ const useAdminStore = create((set, get) => ({
   },
 
   setAscan: async (msg) => {
-    const { UserProjectName,ProcessName,markers,Ascan_Datas } = get();
+    const { UserProjectName, ProcessName, markers, Ascan_Datas, SaveTags } =
+      get();
     // console.log("messages=",msg);
     try {
       if (msg === "StartAscan") {
@@ -269,34 +275,60 @@ const useAdminStore = create((set, get) => ({
           params: {
             msg,
             UserProjectName,
-            ProcessName:`${UserProjectName}:${ProcessName}`,
+            ProcessName: `${UserProjectName}:${ProcessName}`,
           },
         });
-      }else if(msg ==="GetAscan"){
+      } else if (msg === "GetAscan") {
         // console.log("Ascan Api being Called...")
-        const res =  await axiosInstance.get("/SetAscan", {
+        const res = await axiosInstance.get("/SetAscan", {
           params: {
             msg,
             UserProjectName,
             ProcessName,
           },
         });
-        if(res){
+        if (res) {
+          let lineOptions="";
           const response = res.data.ascan;
-          const hasAtSymbol = response.some(item => item.As.includes('@'));
-          // console.log("Contains @:", hasAtSymbol);
-          console.log("Ascan_Datas=",Ascan_Datas)
-          if(hasAtSymbol){
+          const hasAtSymbol = response.some((item) => item.As.includes("@"));
+          // console.log("hasAtSymbol=",response)
+          const Processtag = res.data.process_tags.markers;
+          if (Processtag) {
+             lineOptions = JSON.parse(Processtag).map((data) => ({
+              x: data.x,
+              y: data.y,
+              label: data.label, // same label
+              value: data.value, // same value
+            }));
+          }
+
+          if (hasAtSymbol) {
             set({
-              Ascan:false
-            })
+              Ascan: false,
+              markers: lineOptions,
+              start:res.data.process_tags.start,
+              stop:res.data.process_tags.Stop
+            });
           }
           set({
-            Ascan_Datas:response,
-          })
+            Ascan_Datas: response,
+            markers: lineOptions,
+            start:res.data.process_tags.start,
+            stop:res.data.process_tags.Stop
+          });
         }
-      }else if(msg === "StoreTags"){
-          console.log("=======yess======",markers)
+      } else if (msg === "StoreTags") {
+        // console.log("=======yess======", markers);
+        // console.log("SaveTags==", ProcessName);
+        if (SaveTags === true) {
+          const res = await axiosInstance.get("/SetAscan", {
+            params: {
+              msg,
+              markers: JSON.stringify(markers), // ✅ stringify array
+              ProcessName,
+            },
+          });
+        }
       }
     } catch (error) {
       console.error("Error datas", error);
@@ -321,11 +353,11 @@ const useAdminStore = create((set, get) => ({
       ProjectDevices: [],
       ProjectName: "",
       Ascan: "",
-      ProcessName:"",
-      SaveTags:false,
-      Ascan_Datas:[],
+      ProcessName: "",
+      SaveTags: false,
+      Ascan_Datas: [],
       UserProjectName: "",
-      lineData:[],
+      lineData: [],
     }),
 }));
 

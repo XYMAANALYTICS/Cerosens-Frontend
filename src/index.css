@@ -56,11 +56,11 @@
   }
 
   .parent-bg{
-    @apply bg-[#dee2eb]
+    @apply bg-[#eff3f8]
   }
 
   .navbar-bg{
-    @apply bg-[#FFFFFF]
+    @apply bg-[#fefeff]
   }
   .card-bg{
     @apply bg-[#FFFFFF]
