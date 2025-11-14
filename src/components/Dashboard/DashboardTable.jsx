@@ -9,15 +9,14 @@ const DashboardTable = () => {
                         scrollbarWidth: "thin",
                         scrollbarColor: "#6b7280 transparent",
                       }}>
-      <table className="w-full text-size ">
-        <thead className="text-white btn-bg">
+      <table className="w-full text-size">
+        <thead className="text-white shadow bg-[#4F8CFF] to-[#2F6BFF]">
           <tr>
             <th className="dt-bdr">S.No</th>
             <th className="dt-bdr">Thickness</th>
             <th className="dt-bdr">Battery</th>
             <th className="dt-bdr">Signal Strength</th>
-            <th className="dt-bdr">Board Temperature</th>
-            <th className="dt-bdr">Humidity</th>
+            <th className="dt-bdr">Device Temperature</th>
             <th className="dt-bdr">Pressure</th>
             <th className="dt-bdr">Altitude</th>
             <th className="dt-bdr">Air Quality</th>
@@ -28,14 +27,13 @@ const DashboardTable = () => {
           {tbldata.map((row, rowIndex) => (
             <tr key={rowIndex}>
               <td className="dt-bdr">{rowIndex + 1}</td>
-              <td className="dt-bdr">{row.TH}</td>
-              <td className="dt-bdr">{row.BS}</td>
-              <td className="dt-bdr">{row.SS}</td>
-              <td className="dt-bdr">{row.BT}</td>
-              <td className="dt-bdr">{row.H}</td>
-              <td className="dt-bdr">{row.P}</td>
-              <td className="dt-bdr">{row.A}</td>
-              <td className="dt-bdr">{row.AQ}</td>
+              <td className="dt-bdr">{row.Thickness}</td>
+              <td className="dt-bdr">{row.Battery}</td>
+              <td className="dt-bdr">{row.Signal}</td>
+              <td className="dt-bdr">{row.DeviceTemp}</td>
+              <td className="dt-bdr">{row.Pressure}</td>
+              <td className="dt-bdr">{row.Altitude}</td>
+              <td className="dt-bdr">{row.AirQuality}</td>
               <td className="dt-bdr">{row.Timestamp}</td>
             </tr>
           ))}

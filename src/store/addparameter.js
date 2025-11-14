@@ -7,7 +7,7 @@ const paramters = create((set, get) => ({
   setState: ( partial) => set(partial),
   count:1,
   usercount:1,
-  CurrentLinechartOption:"TH",
+  CurrentLinechartOption:"Thickness",
   Pulse_Width:"",
   Amplitude:"",
   Frequency:"",

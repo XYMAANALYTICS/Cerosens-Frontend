@@ -14,6 +14,7 @@ const LineChartContainer = ({ chartRef, fromPage }) => {
 
   let data = [];
 
+  console.log("dashboardData=",dashboardData)
   if (fromPage === "dashboard") {
     data = dashboardData;
   } else {
@@ -32,7 +33,7 @@ const LineChartContainer = ({ chartRef, fromPage }) => {
     const reversedData = [...data].reverse();
 
     const timestamps = reversedData.map((item) => item.Timestamp);
-    const sensorKeys = ["TH", "SS", "BT", "BS", "AQ", "A", "H", "P"];
+    const sensorKeys = ["Thickness", "Signal", "DeviceTemp", "Battery", "AirQuality", "Altitude", "Pressure"];
     const datasets = [
       {
         label: CurrentLinechartOption,

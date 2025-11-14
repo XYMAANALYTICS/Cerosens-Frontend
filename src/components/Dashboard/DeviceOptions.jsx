@@ -10,13 +10,13 @@ const DeviceOptions = () => {
       onChange={(e) => setState({ CurrentLinechartOption: e.target.value })}
       className="border px-3 py-1 rounded-md text-sm bg-white shadow-md outline-none focus:ring focus:ring-blue-400"
     >
-      <option value="TH">Thickness</option>
-      <option value="BS">Battery</option>
-      <option value="SS">Singnal</option>
-      <option value="BT">Device Temperature</option>
-      <option value="P">Pressure</option>
-      <option value="A">Altitude</option>
-      <option value="AQ">Air Quality</option>
+      <option value="Thickness">Thickness</option>
+      <option value="Battery">Battery</option>
+      <option value="Signal">Singnal</option>
+      <option value="DeviceTemp">Device Temperature</option>
+      <option value="Pressure">Pressure</option>
+      <option value="Altitude">Altitude</option>
+      <option value="AirQuality">Air Quality</option>
     </select>
   );
 };

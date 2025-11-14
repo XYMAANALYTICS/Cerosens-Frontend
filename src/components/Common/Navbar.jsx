@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useProtectedRouteStore from "../../store/protectedRouteStore";
 import useLogout from "../../hooks/useLogout";
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 import iconMap from "../../utils/iconMap";
 import imageMap from "../../utils/imageMap";
@@ -23,56 +24,57 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="w-full h-[100%] navbar-bg shadow">
+<div className="w-full h-[100%] shadow bg-[#4F8CFF] border-white/40 ">
       <div className="h-full w-full flex justify-between p-2">
-        <img
-          src={imageMap.xymaBlue}
-          alt="xymaLogo"
-          className="max-w-[100px]"
-        />
-        <div className="flex items-center justify-center font-bold">Thickness Measurement Device</div>
+        <img src={imageMap.xymaBlue} alt="xymaLogo" className="max-w-[100px]" />
+        <div className="flex items-center justify-center font-bold">
+          Thickness Measurement Device
+        </div>
         <div className="flex items-center gap-4 heading-txt-color">
-          <div className="py-1 px-3 rounded-full bbb btn-bg text-white">{userName}</div>
+          <div className="py-1 px-3 rounded-full text-[#5a5a5a] bg-white/20 backdrop-blur-md shadow-md border border-white/50 flex items-center justify-center gap-1">
+            <IoPersonCircleOutline className="text-[130%]" />
+            {userName}
+          </div>
           {routeMap.map(({ route, label, icon }) => {
             if (route === "/admin" && userRole !== "superAdmin") return null;
             // Special case for Admin with dropdown
             if (route === "/admin" && userRole === "superAdmin") {
               return (
-                <div 
+                <div
                   key={route}
                   className="relative"
                   onMouseEnter={() => setIsAdminHovered(true)}
                   onMouseLeave={() => setIsAdminHovered(false)}
                 >
                   <button
-                    className="hover-effect flex items-center gap-1 hover:text-[#692df5ee]"
+                    className="hover-effect flex items-center gap-1 text-gray-700 hover:from-[#4F8CFF] to-[#2F6BFF]"
                     onClick={() => navigate(route)}
                   >
                     {label} {icon}
                   </button>
 
                   {isAdminHovered && (
-                    <div className="absolute top-full left-0  w-40 bg-[#692df5ee] text-white rounded shadow-lg z-20">
-                      <button 
-                        className="block w-full px-4 py-2 text-left hover:bg-[#9b72faee]"
+                    <div className="absolute top-full left-0  w-40 bg-gradient-to-r from-[#4F8CFF] to-[#2F6BFF] text-white rounded shadow-lg z-20">
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-gradient-to-r hover:from-[#b2cbfa] to-[#2F6BFF]"
                         onClick={() => navigate("/admin/configure")}
                       >
                         Configure
                       </button>
-                       <button 
-                        className="block w-full px-4 py-2 text-left hover:bg-[#9b72faee]"
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-gradient-to-r hover:from-[#b2cbfa] hover:to-[#2F6BFF]"
                         onClick={() => navigate("/admin/Ascan")}
                       >
                         Ascan
                       </button>
-                      <button 
-                        className="block w-full px-4 py-2 text-left hover:bg-[#9b72faee]"
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-gradient-to-r hover:from-[#b2cbfa] hover:to-[#2F6BFF]"
                         onClick={() => navigate("/admin/access-db")}
                       >
                         Access DB
                       </button>
-                      <button 
-                        className="block w-full px-4 py-2 text-left hover:bg-[#9b72faee]"
+                      <button
+                        className="block w-full px-4 py-2 text-left hover:bg-gradient-to-r hover:from-[#b2cbfa] hover:to-[#2F6BFF]"
                         onClick={() => navigate("/admin/other-option")}
                       >
                         Other Option
@@ -86,7 +88,15 @@ const Navbar = () => {
             return (
               <button
                 key={route}
-                className="hover-effect flex items-center gap-1 hover:text-[#692df5ee] hover:border-b font-bold"
+                className="
+  relative flex items-center gap-1 font-bold px-3 py-1 rounded-lg
+  transition-all duration-300
+  hover:text-[#ffffff]
+  hover:bg-white/20
+  hover:backdrop-blur-md
+  hover:shadow-md
+  hover:border hover:border-white/50
+text-gray-200"
                 onClick={() => navigate(route)}
               >
                 {label} {icon}
@@ -95,10 +105,10 @@ const Navbar = () => {
           })}
 
           <button
-            className="underline hover-effect flex items-center gap-1"
+            className=" hover-effect flex items-center justify-center gap-1  p-1 rounded-2xl bg-red-400"
             onClick={logout}
           >
-            Logout <iconMap.ImExit />
+            <iconMap.ImExit className="text-white" />
           </button>
         </div>
       </div>
