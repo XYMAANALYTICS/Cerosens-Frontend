@@ -56,14 +56,14 @@
   }
 
   .parent-bg{
-    @apply bg-[#eff3f8]
+    @apply bg-[#d9f0e7]
   }
 
   .navbar-bg{
     @apply bg-[#fefeff]
   }
   .card-bg{
-    @apply bg-[#FFFFFF]
+    @apply bg-[#ffffff]
   }
   .btn-bg{
     @apply bg-[#692df5ee]
@@ -73,6 +73,9 @@
   }
   .txt-color{
     @apply text-[#5c6369] font-semibold
+  }
+  .card-color{
+    @apply bg-[#FFFFFF]
   }
   .text-size{
     @apply text-[12px]

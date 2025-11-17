@@ -57,7 +57,7 @@ const gridHoverLine = {
 ChartJS.register(gridHoverLine);
 
 // Export sensor colors
-export const sensorColors = ["#1CC1FF", "#3047C0", "#008000", "#FFA500","#D026FF","#FF8426","#264AFF","#00BA21"];
+export const sensorColors = ["#FFA500","#B55602","#3047C0", "#BA023A", "#008000","#D026FF","#FF8426","#264AFF"];
 
 
 
@@ -139,10 +139,10 @@ export const getLineChartOptions = () => ({
   scales: {
     x: {
        grid: {
-        color: "#858585",
+        color: "#95E8C7",
       },
       ticks: {
-        color: "#FFFFFF",
+        color: "#2d2d2d",
         font: {
           size: window.innerWidth > 1536 ? 8 : 7,
         },
@@ -150,10 +150,10 @@ export const getLineChartOptions = () => ({
     },
     y: {
        grid: {
-        color: "#858585", 
+        color: "#95E8C7", 
       },
       ticks: {
-                color: "#FFFFFF",
+                color: "#2d2d2d",
 
         font: {
           size: window.innerWidth > 1536 ? 8 : 7,

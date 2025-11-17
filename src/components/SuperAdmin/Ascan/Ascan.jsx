@@ -6,8 +6,8 @@ import AscanPloting from "./AscanPloting";
 import paramters from "../../../store/addparameter";
 import AscanDropdown from "./AscanDropdown";
 import { MdOutlineRestartAlt } from "react-icons/md";
-import { useState } from "react";
 import { CiLock } from "react-icons/ci";
+import { SiTicktick } from "react-icons/si";
 
 const Ascan = () => {
   const projectdata = useDataStore((s) => s.getprojectdata);
@@ -30,12 +30,13 @@ const Ascan = () => {
   const ProcessName = useAdminStore((s) => s.ProcessName);
   const chartRef = useRef(null);
   const resetState = useAdminStore((s) => s.resetState);
+  const Ascan_Status = paramters((s) => s.Ascan_Status);
 
   useEffect(() => {
     projectdata("GetProjectDevice");
   }, []);
 
-  // console.log("Deviceselect=", Deviceselect);
+  console.log("Ascan_Status=", Ascan_Status);
   return (
     <div className="h-[90%] w-full p-4 flex gap-4 ">
       {/* Sidebar / Form */}
@@ -90,26 +91,48 @@ const Ascan = () => {
         </div>
 
         <div className="p-2">
-          <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-transform transform hover:scale-105">
+          <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-transform transform hover:scale-105">
             Submit
           </button>
         </div>
       </form>
 
       {/* Chart Section */}
-      <div className="w-[78%] h-[100%] shadow navbar-bg rounded-xl flex flex-col overflow-hidden">
+      <div className="w-[78%] h-[100%] shadow navbar-bg rounded-xl flex flex-col overflow-hidden p-2">
         {/* Chart Controls */}
-        <div className="h-[60px] shadow w-full flex justify-end gap-2 p-2 border-gray-700">
+        <div className="h-[60px] shadow w-full flex justify-end gap-2 p-2 border-gray-700 parent-bg rounded-tl-xl rounded-tr-xl">
           {/* {["Download", "Dropdown"].map((btn) => ( */}
-           <div
-            className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
-            // onClick={btn==="Dropdown"}
-          >
-            <CiLock/>
-            Lock
+          <div className="px-3 py-1 rounded-md cursor-pointer flex items-center justify-center gap-2">
+            <div>Status:</div>
+            <div className="flex items-center justify-center gap-2">
+              {Ascan_Status ? (
+                <>
+                  <SiTicktick className="text-green-400" />
+                  <span className="text-green-400">Completed</span>
+                </>
+              ) : Ascan_Status === null?(
+                <>
+                 <SiTicktick className="text-red-400" />
+                  <span className="text-red-400">None</span>
+                </>
+              ):(
+                <>
+                  <SiTicktick className="text-red-400" />
+                  <span className="text-red-400">Incomplete</span>
+                </>
+              )}
+            </div>
           </div>
           <div
             className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
+            // onClick={btn==="Dropdown"}
+          >
+            <CiLock />
+            Lock
+          </div>
+
+          <div
+            className="border border-red-500 text-red-500 px-3 py-1 rounded-md hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
             // onClick={btn==="Dropdown"}
           >
             Download
@@ -123,14 +146,14 @@ const Ascan = () => {
             onClick={() => {
               if (chartRef.current) {
                 chartRef.current.resetZoom();
-                setAscan("StoreTags")
+                setAscan("StoreTags");
                 setState((prev) => ({
                   ...prev,
                   zoomKey: prev.zoomKey + 1,
                 }));
               }
             }}
-          > 
+          >
             <MdOutlineRestartAlt />
           </div>
           <div

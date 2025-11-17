@@ -20,6 +20,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
+import paramters from "../../../store/addparameter";
 
 ChartJS.register(
   CategoryScale,
@@ -76,6 +77,9 @@ const AscanPloting = ({ chartRef }) => {
   const start = useAdminStore((s) => s.start);
   const stop = useAdminStore((s) => s.stop);
   const zoomKey = useAdminStore((s) => s.zoomKey);
+  const Ascan_Status = paramters((s) => s.Ascan_Status);
+
+    const Ascan_Status_setState = paramters((s) => s.setState);
 
   // console.log("zoom key", zoomKey)
 
@@ -110,7 +114,7 @@ const AscanPloting = ({ chartRef }) => {
  : []
     );
 
-    console.log("allAmplitudes=",allAmplitudes)  
+
 
     const timestamps = Array.from({ length: allAmplitudes.length }, (_, i) =>
       Number(
@@ -279,7 +283,9 @@ const AscanPloting = ({ chartRef }) => {
     setMarkerPixels(newPixels);
   }, [chartRef.current, markers, lineData, zoomKey]);
 
-  // console.log("marker pixels", markerPixels)
+  const hasAtSymbol = Ascan_Datas?.some(d => d.As && d.As.includes("@"))||null;
+  Ascan_Status_setState({Ascan_Status:hasAtSymbol});
+  console.log("marker pixels", hasAtSymbol)
 
   return (
     <div className="relative w-full h-full">

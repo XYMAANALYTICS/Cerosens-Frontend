@@ -6,7 +6,7 @@ const ThicknessCard = () => {
   const lastData = useDataStore((s) => s.lastData);
   const Thickness = lastData?.Thickness ?? "N/A";
   return (
-    <div className="h-[100%] w-full flex items-center justify-center inset-shadow-sm inset-shadow-gray-400 rounded-xl card-bg">
+    <div className="h-[100%] w-full flex items-center justify-center shadow-md rounded-xl card-bg">
       <div className="flex flex-col items-center justify-center" >
         <div className="felx items-center justify-center font-bold heading-txt-color">
           {Thickness}  / 45 mm

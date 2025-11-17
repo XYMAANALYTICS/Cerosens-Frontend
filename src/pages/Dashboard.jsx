@@ -33,13 +33,13 @@ const Dashboard = () => {
         <div className="w-[50%]">
           <SensorCard />
         </div>
-        <div className="w-[50%] p-1 felx items-center justify-center  inset-shadow-sm inset-shadow-[#947CEF] rounded-xl card-bg">
+        <div className="w-[50%] h-[100%] p-2 felx items-center justify-center  rounded-xl shadow-xl card-bg">
           <DashboardTable />
         </div>
       </div>
 
       <div className="w-full h-[50%] flex gap-2">
-        <div className=" p-1 h-[100%] w-[80%] card-bg rounded-md heading-txt-color inset-shadow-sm inset-shadow-gray-400">
+        <div className=" p-1 h-[100%] w-[80%] card-bg rounded-md heading-txt-color shadow-lg">
           <div className="h-[10%]  flex gap-2 items-center justify-end">
             <DeviceOptions />
             <button
@@ -49,16 +49,18 @@ const Dashboard = () => {
               <RiResetRightFill className="text-red-500" />
             </button>
           </div>
-          <div className="h-[90%]">
+          <div className="h-[90%] p-2">
             {/* Chart */}
-            <LineChartContainer
-              chartRef={chartRef}
-              fromPage="dashboard"
-              // selectedSensor={selectedSensor}
-            />
+            <div className="rounded-xl h-[100%] parent-bg">
+              <LineChartContainer
+                chartRef={chartRef}
+                fromPage="dashboard"
+                // selectedSensor={selectedSensor}
+              />
+            </div>
           </div>
         </div>
-        <div className="w-[20%] flex items-center justify-center card-bg rounded-md heading-txt-color inset-shadow-sm inset-shadow-gray-400 ">
+        <div className="w-[20%] flex items-center justify-center card-bg rounded-md heading-txt-color shadow-lg ">
           <img
             src={imageMap.productimg}
             alt="product"
