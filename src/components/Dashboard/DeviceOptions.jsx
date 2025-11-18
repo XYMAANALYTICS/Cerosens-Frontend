@@ -9,7 +9,7 @@ const DeviceOptions = () => {
     <select
       value={CurrentLinechartOption}
       onChange={(e) => {setState({ CurrentLinechartOption: e.target.value }),getData()}}
-      className="border px-3 py-1 rounded-md text-sm bg-white shadow-md outline-none focus:ring focus:ring-blue-400"
+      className="border px-3 py-1 rounded-md text-sm bg-white shadow-md outline-none focus:ring focus:ring-blue-400 text-[8px] md:text-[10px] 2xl:text-[12px]"
     >
       <option value="Thickness">Thickness</option>
       <option value="Battery">Battery</option>

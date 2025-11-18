@@ -18,7 +18,7 @@ const Adduser = () => {
     <div className="h-[100%] border-white flex justify-end relative">
       {/* Button */}
       <div
-        className="flex items-center justify-end gap-2  px-4 rounded-2xl cursor-pointer card-bg hover:bg-gray-100 heading-txt-color inset-shadow-sm inset-shadow-gray-400"
+        className="flex items-center justify-end   px-4 rounded-2xl cursor-pointer card-bg hover:bg-[#3a3a46] hover:text-[#38CE3C] hover:scale-110 heading-txt-color shadow-lg bg-[#2a2a38] text-white"
         onClick={() => setState({ addbtnstatus: true })}
       >
         <IoPersonAdd />
@@ -29,13 +29,13 @@ const Adduser = () => {
       {add && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           {/* Background Blur */}
-          <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+          <div className="absolute inset-0 bg-whit/10 backdrop-blur-sm"></div>
 
           {/* Centered Content */}
-          <div className="relative z-10 bg-black/20  text-white rounded-xl shadow-xl p-8 w-[30%] h-[30%] flex items-center justify-center">
+          <div className="relative z-10 bg-black/80  text-white rounded-xl shadow-xl p-8 w-[30%] h-[30%] flex items-center justify-center">
             <div className="flex gap-5">
               <button
-                className="text-black  bg-white p-5 rounded-xl hover-effect hover:bg-[#947CEF] hover:text-white"
+                className="text-black  bg-[#eaf3f5] p-5 rounded-xl hover-effect hover:bg-[#38CE3C] hover:text-white"
                 onClick={() =>
                   setState({ addbtnstatus: false, addptojectbtnstatus: true })
                 }
@@ -46,7 +46,7 @@ const Adduser = () => {
                 Add Project
               </button>
               <button
-                className="text-black bg-white p-5 rounded-xl hover-effect hover:bg-[#947CEF] hover:text-white"
+                className="text-black bg-[#eaf3f5] p-5 rounded-xl hover-effect hover:bg-[#38CE3C] hover:text-white"
                 onClick={() =>
                   setState({ addbtnstatus: false, addpuserbtnstatus: true })
                 }
@@ -74,7 +74,7 @@ const Adduser = () => {
           {/* Background Blur */}
           <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
           {/* Centered Content */}
-          <div className="relative z-10 bg-black/20  text-white rounded-xl shadow-xl p-4 w-[50%] h-[75%] flex items-center justify-center">
+          <div className="relative z-10 bg-black/80  text-white rounded-xl shadow-xl p-4 w-[50%] h-[75%] flex items-center justify-center">
             {/* Close button */}
             <AddprojectPopup />
             <button
@@ -92,7 +92,7 @@ const Adduser = () => {
           <div className="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
 
           {/* Centered Content */}
-          <div className="relative z-10 bg-black/20  text-white rounded-xl shadow-xl p-4 w-[40%] h-[85%] flex items-center justify-center">
+          <div className="relative z-10 bg-black/80 text-white rounded-xl shadow-xl p-4 w-[40%] h-[85%] flex items-center justify-center">
             {/* Close button */}
             <AdduserPopup />
             <button

@@ -26,7 +26,7 @@ const RegisterForm = () => {
 
   return (
     <form
-      className="rounded-xl p-4 flex flex-col gap-4 whitespace-nowrap card-bg heading-txt-color inset-shadow-sm inset-shadow-gray-400 "
+      className="rounded-xl border border-[#bae9bc] p-4 flex text-[8px] md:text-[10px] 2xl:text-[12px] flex-col gap-4 whitespace-nowrap card-bg heading-txt-color"
       onSubmit={(e) => {
         e.preventDefault();
         addCredential();

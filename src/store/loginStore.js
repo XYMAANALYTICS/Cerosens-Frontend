@@ -23,6 +23,7 @@ const useLoginStore = create((set, get) => ({
       });
 
       if (response.status === 200) {
+        console.log("Status success==",response)
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("loggedInTime", response.data.loggedInTime);

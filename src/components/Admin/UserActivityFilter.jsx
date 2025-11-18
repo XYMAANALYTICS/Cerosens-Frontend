@@ -9,13 +9,13 @@ const UserActivityFilter = () => {
   // console.log("user actvity filter rendered");
 
   return (
-    <div className="flex items-center gap-4 overflow-auto w-full rounded-2xl card-bg heading-txt-color inset-shadow-sm inset-shadow-gray-400">
+    <div className="flex items-center h-[100%] p-1 text-[8px] md:text-[10px] 2xl:text-[12px] gap-4 overflow-auto w-full rounded-2xl card-bg heading-txt-color shadow border border-[#bae9bc]">
       <div>Filter:</div>
 
       {/* user based filter */}
       <label>User:</label>
       <select
-        className="in-field text-center btn-bg"
+        className="in-field text-center bg-[#2a2a38] text-[#38CE3C]"
         value={filterUser}
         onChange={(e) => setState({ filterUser: e.target.value })}
       >
@@ -32,7 +32,7 @@ const UserActivityFilter = () => {
       <label>Activity</label>
 
       <select
-        className="in-field text-center btn-bg"
+        className="in-field text-center bg-[#2a2a38] text-[#38CE3C]"
         value={filterActivity}
         onChange={(e) => setState({ filterActivity: e.target.value })}
       >

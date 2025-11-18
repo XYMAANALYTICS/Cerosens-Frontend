@@ -8,7 +8,7 @@ const ActivityStatus = () => {
   // console.log("activity status rendered");
 
   return (
-    <div className="p-2">
+    <div className="p-2 text-[8px] md:text-[10px] 2xl:text-[12px]">
       {!activityStatus || activityStatus === "inactive"
         ? (<div className="flex items-center justify-center gap-2 text-red-400 heading-txt-color">
           <MdOutlineSensorsOff/>

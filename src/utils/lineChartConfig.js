@@ -57,7 +57,7 @@ const gridHoverLine = {
 ChartJS.register(gridHoverLine);
 
 // Export sensor colors
-export const sensorColors = ["#FFA500","#B55602","#3047C0", "#BA023A", "#008000","#D026FF","#FF8426","#264AFF"];
+export const sensorColors = ["#008000","#FFA500","#B55602","#3047C0", "#BA023A","#D026FF","#FF8426","#264AFF"];
 
 
 

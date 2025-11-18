@@ -29,7 +29,7 @@ const AddprojectPopup = () => {
     >
       {/* Project Name */}
       <div className="flex flex-col items-center gap-2 w-full">
-        <label className="text-white text-lg font-medium">
+        <label className="text-green-500 text-lg font-medium">
           Enter Project Name
         </label>
         <input
@@ -37,7 +37,7 @@ const AddprojectPopup = () => {
           name="project"
           required
           value={ProjectName}
-          className="in-field border rounded-md px-3 py-2 w-64 text-center"
+          className="in-field border rounded-md px-3 py-2 w-64 text-center bg-white text-green-500"
           onChange={(e) => setState({ ProjectName: e.target.value })}
         />
       </div>
@@ -45,23 +45,23 @@ const AddprojectPopup = () => {
       {/* Sensor Count */}
       <div className="flex gap-6">
         <div className="flex flex-col items-center gap-2 border-r p-2">
-          <label className="text-white text-lg font-medium">
+          <label className="text-green-500 text-lg font-medium">
             Number of Sensors
           </label>
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="border px-3 py-1 rounded-md hover-effect bg-gray-200 text-black"
+              className="border px-3 py-1 rounded-md hover-effect bg-gray-200 text-green-500"
               onClick={() => setState({ count: count > 0 ? count - 1 : 0 })}
             >
               -
             </button>
-            <span className="text-lg font-semibold w-10 text-center">
+            <span className="text-lg font-semibold w-10 text-center text-green-500">
               {count}
             </span>
             <button
               type="button"
-              className="border px-3 py-1 hover-effect rounded-md bg-gray-200 text-black"
+              className="border px-3 py-1 hover-effect rounded-md bg-gray-200 text-green-500"
               onClick={() => setState({ count: count + 1 })}
             >
               +
@@ -71,25 +71,25 @@ const AddprojectPopup = () => {
 
         {/* User Count */}
         <div className="flex flex-col items-center gap-2 p-2">
-          <label className="text-white text-lg font-medium">
+          <label className="text-green-500 text-lg font-medium">
             Number of Users
           </label>
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="border px-3 py-1 rounded-md hover-effect bg-gray-200 text-black"
+              className="border px-3 py-1 rounded-md hover-effect bg-gray-200 text-green-500"
               onClick={() =>
                 setState({ usercount: usercount > 0 ? usercount - 1 : 0 })
               }
             >
               -
             </button>
-            <span className="text-lg font-semibold w-10 text-center">
+            <span className="text-lg font-semibold w-10 text-center text-green-500">
               {usercount}
             </span>
             <button
               type="button"
-              className="border px-3 py-1 hover-effect rounded-md bg-gray-200 text-black"
+              className="border px-3 py-1 hover-effect rounded-md bg-gray-200 text-green-500"
               onClick={() => setState({ usercount: usercount + 1 })}
             >
               +
@@ -102,7 +102,7 @@ const AddprojectPopup = () => {
           {DeviceList.map((sensor, index) => (
             <div
               key={index}
-              className="border p-2 text-center rounded bg-gray-300 text-black cursor-pointer"
+              className="border p-2 text-center rounded bg-gray-300 text-green-500 cursor-pointer"
               onClick={() =>
                 setState((prev) => {
                   // clone current array or initialize
@@ -135,7 +135,7 @@ const AddprojectPopup = () => {
       <div>
         <button
           type="submit"
-          className="hover-effect px-6 py-2 bg-green-400 text-black font-medium rounded-md hover:bg-green-500 transition"
+          className="hover-effect px-6 py-2 bg-green-400 text-white font-medium rounded-md hover:bg-green-500 transition"
         >
           Submit
         </button>

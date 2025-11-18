@@ -44,7 +44,7 @@ const AdduserPopup = () => {
       {/* Project Name */}
       <div className="flex gap-4  h-[20%] w-full">
         <div className="flex flex-col items-center gap-2 w-full">
-          <label className="text-white font-medium">Select Project Name</label>
+          <label className="text-green-500 font-medium">Select Project Name</label>
           <Dropdown
             options={ProjectName}
             value={UserProjectName}
@@ -57,33 +57,33 @@ const AdduserPopup = () => {
           />
         </div>
         <div className="flex flex-col items-center gap-2 w-full">
-          <label className="text-white font-medium">User Name</label>
+          <label className="text-green-500 font-medium">User Name</label>
           <input
             type="text"
             value={Username}
             onChange={(e) => setState({ Username: e.target.value })}
-            className="in-field border rounded-md px-3 py-2 w-44 h-8 text-center"
+            className="in-field border rounded-md px-3 py-2 w-44 h-8 text-center text-black bg-white"
           />
         </div>
       </div>
 
       <div className="flex gap-4 h-[20%] w-full ">
         <div className="flex flex-col items-center gap-2 w-full">
-          <label className="text-white font-medium">User ID</label>
+          <label className="text-green-500 font-medium">User ID</label>
           <input
             type="text"
             value={UserID}
             onChange={(e) => setState({ UserID: e.target.value })}
-            className="in-field border rounded-md px-3 py-2 w-44 text-center h-8"
+            className="in-field border rounded-md px-3 py-2 w-44 text-center h-8 text-black bg-white"
           />
         </div>
         <div className="flex flex-col items-center gap-2 w-full">
-          <label className="text-white font-medium">Password</label>
+          <label className="text-green-500 font-medium">Password</label>
           <input
             type="password"
             value={Password}
             onChange={(e) => setState({ Password: e.target.value })}
-            className="in-field border rounded-md px-3 py-2 w-44 text-center h-8"
+            className="in-field border rounded-md px-3 py-2 w-44 text-center h-8 text-black bg-white"
           />
         </div>
       </div>
@@ -112,7 +112,7 @@ const AdduserPopup = () => {
 
       {/* Sensor List */}
       <div className="flex items-center justify-center h-[5%] w-full ">
-        <label className="text-white text-lg font-medium flex items-center justify-center">
+        <label className="text-green-500 text-lg font-medium flex items-center justify-center">
           Select Project Devices
         </label>
       </div>
@@ -122,8 +122,8 @@ const AdduserPopup = () => {
             key={index}
             className={`border h-[30%] flex items-center justify-center p-2 text-center rounded cursor-pointer ${
               ProjectDevices.includes(sensor)
-                ? "bg-green-400 text-black"
-                : "bg-gray-300 text-black"
+                ? "bg-green-400 text-green-500"
+                : "bg-gray-300 text-green-500"
             }`}
             onClick={() =>
               setState((prev) => ({
@@ -141,7 +141,7 @@ const AdduserPopup = () => {
       <div className="h-[10%] w-full flex items-center justify-center">
         <button
           type="submit"
-          className="hover-effect px-6 py-2 bg-green-400 text-black font-medium rounded-md hover:bg-green-500 transition"
+          className="hover-effect px-6 py-2 bg-green-400 text-white font-medium rounded-md hover:bg-green-500 transition"
         >
           Submit
         </button>

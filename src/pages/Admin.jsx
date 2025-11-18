@@ -27,17 +27,19 @@ const Admin = () => {
         <RegisterForm />
 
         {/* users table */}
-        <div className="w-full h-[100%] card-bg p-1 rounded-xl ">
+        <div className="w-full h-[100%] card-bg p-1 rounded-xl border border-[#bae9bc]">
           <UserListTable />
         </div>
       </div>
 
       <div className="flex flex-col gap-2  h-[50%]">
         {/* filter user activity */}
-        <UserActivityFilter />
+        <div className="h-[15%] ">
+          <UserActivityFilter />
+        </div>
 
         {/* user activity table */}
-        <div className="overflow-y-auto h-[300px] table-style">
+        <div className="overflow-y-auto h-[80%] table-style">
           <TableContainer fromPage={"admin"} />
         </div>
       </div>

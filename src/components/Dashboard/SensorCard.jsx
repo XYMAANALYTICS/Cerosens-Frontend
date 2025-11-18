@@ -16,13 +16,10 @@ const SensorCard = () => {
   const ProjectName = useDataStore((s) => s.UserDeviceist);
   const setState = useAdminStore((s) => s.setState);
   const resetState = useAdminStore((s) => s.resetState);
-
   const UserProjectName = useAdminStore((s) => s.UserProjectName);
-
   const Signal = lastData?.Signal ?? "N/A";
   const Battery = lastData?.Battery ?? "N/A";
   const DeviceTemp = lastData?.DeviceTemp ?? "N/A";
-
   const Altitude = lastData?.Altitude ?? "N/A";
   const AirQuality = lastData?.AirQuality ?? "N/A";
   const Pressure = lastData?.Pressure ?? "N/A";
@@ -32,7 +29,7 @@ const SensorCard = () => {
       <div className="h-[40%] flex gap-2 ">
         <div className="w-[30%] flex flex-col gap-2">
           <div className=" h-[50%] flex flex-col p-1 items-center justify-center rounded-md">
-            <div className="w-[100%] h-[100%]">
+            <div className="w-[100%] h-[100%] ">
               <Dropdown
                 options={ProjectName}
                 value={UserProjectName}
@@ -55,7 +52,7 @@ const SensorCard = () => {
               className="text-center"
             /> */}
           </div>
-          <div className="card-bg h-[50%] flex items-center justify-center rounded-md shadow-md border-[#e5e7eb]">
+          <div className="card-bg h-[50%] border border-[#bae9bc] flex items-center justify-center rounded-md shadow-md">
             <ActivityStatus />
           </div>
         </div>
@@ -64,61 +61,61 @@ const SensorCard = () => {
         </div>
       </div>
       <div className="h-[57%] flex flex-col gap-2">
-        <div className="h-[30%] flex gap-2">
-          <div className="w-[70%] card-bg shadow-md rounded-md card-bg flex p-2 items-center justify-between">
-            <div className="flex flex-col txt-color text-size ">
+        <div className="h-[30%] flex gap-2 ">
+          <div className="w-[70%] card-bg shadow-md border border-[#bae9bc] rounded-md card-bg flex p-2 items-center justify-between">
+            <div className="flex flex-col txt-color text-[8px] md:text-[10px] 2xl:text-[12px] ">
               <div className="flex items-center justify-center gap-2">
-                <MdOutlineCellTower className="text-md text-blue-500" />
+                <MdOutlineCellTower className="text-md text-blue-500 text-2xl" />
                 <span className="heading-txt-color">{Signal + "%"}</span>
               </div>
               <span className="">Signal Strenth</span>
             </div>
-            <div className="flex flex-col txt-color text-size ">
+            <div className="flex flex-col txt-color text-[8px] md:text-[10px] 2xl:text-[12px] ">
               <div className="flex items-center justify-center gap-2">
-                <BsBatteryHalf className="text-md text-green-500" />
+                <BsBatteryHalf className="text-md text-green-500 text-2xl" />
                 <span className="heading-txt-color">{Battery + "%"}</span>
               </div>
               <span className="">Battery Status</span>
             </div>
-            <div className="flex flex-col txt-color text-size ">
+            <div className="flex flex-col txt-color text-[8px] md:text-[10px] 2xl:text-[12px] ">
               <div className="flex items-center justify-center gap-2">
-                <TbDeviceImacStar className="text-md text-red-500" />
+                <TbDeviceImacStar className="text-md text-red-500 text-2xl" />
                 <span className="heading-txt-color">{DeviceTemp + "℃"} </span>
               </div>
               <span className="">Device Temperature</span>
             </div>{" "}
           </div>
-          <div className="card-bg w-[30%] shadow-md rounded-md card-bg">
+          <div className="card-bg  w-[30%] shadow-md rounded-md card-bg border border-[#bae9bc]">
             <LastDataTime />
           </div>
         </div>
-        <div className="border-t h-[70%] shadow-md rounded-md card-bg flex p-2 justify-between card-bg">
-          <div className="border-r h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
+        <div className="border-t border border-[#bae9bc] h-[70%] shadow-md rounded-md card-bg flex p-2 justify-between card-bg">
+          <div className="text-[8px] md:text-[10px] 2xl:text-[12px] border-r h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
             <div className="flex flex-col items-center justify-center">
               <span className="heading-txt-color">{Pressure + ""}</span>
 
               <div className="flex  items-center justify-center gap-2">
-                <LiaCompressArrowsAltSolid className="text-md text-red-500" />
+                <LiaCompressArrowsAltSolid className="text-md text-red-500 text-2xl" />
                 <span className="">Pressure</span>
               </div>
             </div>
           </div>
-          <div className="border-r h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
+          <div className="text-[8px] md:text-[10px] 2xl:text-[12px] border-r h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
             <div className="flex flex-col items-center justify-center">
               <span className="heading-txt-color">{Altitude + ""}</span>
 
               <div className="flex  items-center justify-center gap-2">
-                <CiLineHeight className="text-md text-pink-500" />
+                <CiLineHeight className="text-md text-pink-500 text-2xl" />
                 <span className="">Altitude</span>
               </div>
             </div>
           </div>
-          <div className="h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
+          <div className="text-[8px] md:text-[10px] 2xl:text-[12px] h-[100%] w-1/3 border-gray-400 txt-color flex items-center justify-center">
             <div className="flex flex-col items-center justify-center">
               <span className="heading-txt-color">{AirQuality + ""}</span>
 
               <div className="flex  items-center justify-center gap-2">
-                <MdAir className="text-md text-purple-500" />
+                <MdAir className="text-md text-purple-500 text-2xl" />
                 <span className="">Air Quality</span>
               </div>
             </div>

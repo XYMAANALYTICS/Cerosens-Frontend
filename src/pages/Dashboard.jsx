@@ -33,13 +33,13 @@ const Dashboard = () => {
         <div className="w-[50%]">
           <SensorCard />
         </div>
-        <div className="w-[50%] h-[100%] p-2 felx items-center justify-center  rounded-xl shadow-xl card-bg">
+        <div className="w-[50%] h-[100%] p-2 felx items-center justify-center  rounded-xl shadow-xl card-bg border border-[#bae9bc]">
           <DashboardTable />
         </div>
       </div>
 
       <div className="w-full h-[50%] flex gap-2">
-        <div className=" p-1 h-[100%] w-[80%] card-bg rounded-md heading-txt-color shadow-lg">
+        <div className=" p-1 h-[100%] w-[80%] card-bg rounded-md heading-txt-color shadow-lg border border-[#bae9bc]">
           <div className="h-[10%]  flex gap-2 items-center justify-end">
             <DeviceOptions />
             <button
@@ -60,7 +60,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="w-[20%] flex items-center justify-center card-bg rounded-md heading-txt-color shadow-lg ">
+        <div className="w-[20%] border border-[#bae9bc] flex items-center justify-center card-bg rounded-md heading-txt-color shadow-lg ">
           <img
             src={imageMap.productimg}
             alt="product"

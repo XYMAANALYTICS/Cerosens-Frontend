@@ -13,9 +13,9 @@ const AdminPopup = () => {
 
   return (
     confirmationPopup && (
-      <div className="popup-outer">
+      <div className="popup-outer text-[8px] md:text-[10px] 2xl:text-[12px]">
         <form
-          className="popup-inner"
+          className="popup-inner bg-white"
           onSubmit={(e) => {
             e.preventDefault();
             setAdminData();
@@ -35,13 +35,13 @@ const AdminPopup = () => {
               value={newPassword}
               placeholder="Enter Password..."
               onChange={(e) => setState({ newPassword: e.target.value })}
-              className="in-field"
+              className="in-field border"
             />
           )}
 
           <div className="flex items-center justify-end gap-4">
             <div
-              className="button-style-1"
+              className="button-style-1 border border-green-300 text-white bg-green-500"
               onClick={() => {
                 setState({
                   userId: "",
@@ -54,7 +54,7 @@ const AdminPopup = () => {
             >
               Cancel
             </div>
-            <button className="button-style-1" type="submit">
+            <button className="button-style-1 border border-red-300 text-white bg-red-500" type="submit">
               {requestFor === "reset" ? "Reset" : "Delete"}
             </button>
           </div>

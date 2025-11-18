@@ -26,7 +26,7 @@ const UserListTable = () => {
 
   return (
     <div className=" flex gap-2 h-full w-full ">
-      <div className="w-[30%] flex items-center justify-center card-bg   rounded-md heading-txt-color inset-shadow-sm inset-shadow-gray-400 ">
+      <div className="w-[30%] flex items-center justify-center card-bg   rounded-md heading-txt-color shadow-lg">
         <PieChart
           series={[
             { innerRadius: 50, outerRadius: 100, data, arcLabel: "value" },
@@ -34,31 +34,36 @@ const UserListTable = () => {
           {...settings}
         />
       </div>
-      <div className="w-[70%] card-bg p-1 rounded-md heading-txt-color inset-shadow-sm inset-shadow-gray-400 ">
-        <table className="overflow-auto w-full text-white rounded-md ">
-          <thead className="text-white btn-bg">
+      <div className="w-[70%] card-bg p-2 heading-txt-color overflow-auto border-[#bae9bc] shadow-md  rounded-xl" 
+      style={{
+        maxHeight: "100%",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#DCDEDD transparent",
+      }}>
+      <table className="w-full border-collapse text-[8px] md:text-[10px] 2xl:text-[12px]">
+        <thead className="sticky top-0 parent-bg text-gray-900 shadow-sm">
             <tr>
-              <th className="t-bdr">S.No</th>
-              <th className="t-bdr">ProjectName</th>
-              <th className="t-bdr">Username</th>
-              <th className="t-bdr">Role</th>
-              <th className="t-bdr">UserID</th>
-              <th className="t-bdr">Sensors</th>
-              <th className="t-bdr">Timestamp</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">S.No</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">ProjectName</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">Username</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">Role</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">UserID</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">Sensors</th>
+              <th className="px-3 py-3 text-left font-semibold border-b border-gray-300">Timestamp</th>
             </tr>
           </thead>
-          <tbody className="txt-color text-[10px]">
+          <tbody>
             {gettabledatas &&
               gettabledatas.map((data, i) => (
                 <tr key={i}>
-                  <td className="t-bdr">{i + 1}</td>
-                  <td className="t-bdr">{data.ProjectName}</td>
-                  <td className="t-bdr">{data.Username}</td>
-                  <td className="t-bdr">{data.Role}</td>
-                  <td className="t-bdr">{data.UserID}</td>
-                  <td className="t-bdr">
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{i + 1}</td>
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{data.ProjectName}</td>
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{data.Username}</td>
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{data.Role}</td>
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{data.UserID}</td>
+                  <td className="p-2 odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">
                     <div
-                      className="max-h-20 overflow-y-auto w-40 scrollbar-hide"
+                      className="max-h-20 overflow-y-auto w-40 scrollbar-hid odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300e"
                       style={{
                         scrollbarWidth: "none", // Firefox
                         msOverflowStyle: "none", // IE/Edge
@@ -76,7 +81,7 @@ const UserListTable = () => {
                     </div>
                   </td>
 
-                  <td className="t-bdr">{data.Timestamp}</td>
+                  <td className="odd:bg-white even:bg-gray-50 hover:bg-gray-200 transition border-b border-gray-300">{data.Timestamp}</td>
                 </tr>
               ))}
           </tbody>

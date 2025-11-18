@@ -4,34 +4,46 @@ const UserListTable = () => {
   const users = useAdminStore((d) => d.users);
   const setState = useAdminStore((d) => d.setState);
 
-  // console.log("user table rendered");
-
   return (
-    <div>
-      <table className="overflow-auto w-full  heading-txt-color inset-shadow-sm inset-shadow-gray-400">
-        <thead>
-          <tr>
-            <th className="t-bdr">S.No</th>
-            <th className="t-bdr">Name</th>
-            <th className="t-bdr">Email</th>
-            <th className="t-bdr">Role</th>
-            <th className="t-bdr">Accepted TC</th>
-            <th className="t-bdr">Delete</th>
-            <th className="t-bdr">Reset Pass</th>
+    <div
+      className="overflow-y-auto"
+      style={{
+        maxHeight: "100%",
+        scrollbarWidth: "thin",
+        scrollbarColor: "#DCDEDD transparent",
+      }}
+    >
+      <table className="w-full border-collapse text-size">
+        {/* ---------- TABLE HEADER ---------- */}
+        <thead className="text-black sticky top-0 bg-white shadow-md text-[8px] md:text-[10px] 2xl:text-[12px]">
+          <tr className="parent-bg">
+            <th className="py-3 px-2 text-left">S.No</th>
+            <th className="py-3 px-2 text-left">Name</th>
+            <th className="py-3 px-2 text-left">Email</th>
+            <th className="py-3 px-2 text-left">Role</th>
+            <th className="py-3 px-2 text-left">Accepted TC</th>
+            <th className="py-3 px-2 text-left">Delete</th>
+            <th className="py-3 px-2 text-left">Reset Pass</th>
           </tr>
         </thead>
 
-        <tbody>
+        {/* ---------- TABLE BODY ---------- */}
+        <tbody className="text-[8px] md:text-[11px] 2xl:text-[12px]">
           {users.map((user, i) => (
-            <tr key={i}>
-              <td className="t-bdr">{i + 1}</td>
-              <td className="t-bdr">{user.Name}</td>
-              <td className="t-bdr">{user.Email}</td>
-              <td className="t-bdr">{user.Role}</td>
-              <td className="t-bdr">{user.AcceptedTC}</td>
-              <td className="t-bdr">
+            <tr
+              key={i}
+              className="border-b border-gray-300 odd:bg-gray-50 hover:bg-gray-200 transition"
+            >
+              <td className="py-2 px-2">{i + 1}</td>
+              <td className="py-2 px-2">{user.Name}</td>
+              <td className="py-2 px-2">{user.Email}</td>
+              <td className="py-2 px-2">{user.Role}</td>
+              <td className="py-2 px-2">{user.AcceptedTC}</td>
+
+              {/* Delete Button */}
+              <td className="py-2 px-2">
                 <button
-                  className="button-style-1"
+                  className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded"
                   onClick={() => {
                     setState({
                       userId: user._id,
@@ -44,9 +56,11 @@ const UserListTable = () => {
                   Delete
                 </button>
               </td>
-              <td className="t-bdr">
+
+              {/* Reset Button */}
+              <td className="py-2 px-2">
                 <button
-                  className="button-style-1"
+                  className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded"
                   onClick={() => {
                     setState({
                       userId: user._id,
