@@ -82,6 +82,7 @@
   }
   .hover-effect-color{
     @apply hover:bg-[#947CEF]
- 
   }
+  
+
 }

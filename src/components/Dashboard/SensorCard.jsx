@@ -10,13 +10,17 @@ import { MdAir } from "react-icons/md";
 import { LiaCompressArrowsAltSolid } from "react-icons/lia";
 import useAdminStore from "../../store/adminStore";
 import Dropdown from "react-dropdown";
+import { useEffect } from "react";
 
 const SensorCard = () => {
   const lastData = useDataStore((s) => s.lastData);
-  const ProjectName = useDataStore((s) => s.UserDeviceist);
+  const RespectiveDevice = useDataStore((s) => s.RespectiveDevice);
+
+  const SelectedDevice = useDataStore((s) => s.SelectedDevice);
   const setState = useAdminStore((s) => s.setState);
-  const resetState = useAdminStore((s) => s.resetState);
+  const getData = useDataStore((s) => s.getData);
   const UserProjectName = useAdminStore((s) => s.UserProjectName);
+  const getRespectiveDeviceList = useDataStore((s)=>s.getRespectiveDeviceList);
   const Signal = lastData?.Signal ?? "N/A";
   const Battery = lastData?.Battery ?? "N/A";
   const DeviceTemp = lastData?.DeviceTemp ?? "N/A";
@@ -24,33 +28,40 @@ const SensorCard = () => {
   const AirQuality = lastData?.AirQuality ?? "N/A";
   const Pressure = lastData?.Pressure ?? "N/A";
 
+  useEffect(()=>{
+      getRespectiveDeviceList();
+  },[]);
+
+  ;
+// Clean it
+// RespectiveDevice = RespectiveDevice[0]
+//   .split(",")      
+//   .filter(Boolean);  
+
+const cleanedDevices = (RespectiveDevice?.[0] || "")
+  .split(",")
+  .filter(Boolean).reverse();
+
+
+
   return (
     <div className=" rounded-md h-[100%] flex flex-col gap-2">
       <div className="h-[40%] flex gap-2 ">
         <div className="w-[30%] flex flex-col gap-2">
           <div className=" h-[50%] flex flex-col p-1 items-center justify-center rounded-md">
-            <div className="w-[100%] h-[100%] ">
+            <div className="w-[100%] h-[100%]">
               <Dropdown
-                options={ProjectName}
-                value={UserProjectName}
+                options={cleanedDevices}
+                value={SelectedDevice}
                 onChange={(val) => {
-                  resetState();
-                  setState({ UserProjectName: val.value });
+                  setState({SelectedDevice:val.value}),
+                  localStorage.setItem("Device",val.value);
+                  getData();
                 }}
                 placeholder="Select Device"
                 className="text-center"
               />
             </div>
-            {/* <Dropdown
-              options={ProjectName}
-              value={UserProjectName}
-              onChange={(val) => {
-                resetState();
-                setState({ UserProjectName: val.value });
-              }}
-              placeholder="Select Device"
-              className="text-center"
-            /> */}
           </div>
           <div className="card-bg h-[50%] border border-[#bae9bc] flex items-center justify-center rounded-md shadow-md">
             <ActivityStatus />

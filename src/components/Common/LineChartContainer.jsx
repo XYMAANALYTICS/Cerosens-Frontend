@@ -14,7 +14,6 @@ const LineChartContainer = ({ chartRef, fromPage }) => {
 
   let data = [];
 
-  console.log("dashboardData=",dashboardData)
   if (fromPage === "dashboard") {
     data = dashboardData;
   } else {

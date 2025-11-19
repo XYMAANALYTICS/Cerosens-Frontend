@@ -11,15 +11,28 @@ const useDataStore = create((set) => ({
   NoU: "",
   NoS: "",
   GetAscanList:[],
+  RespectiveDevice:[],
+  SelectedDevice:"",
+  SelectedLimit:"",
+  // setState: (partial) => set(partial),
 
-  getData: async () => {
-    try {
-      const response = await axiosInstance.get("/getData");
+    getData: async () => {
+      try {
+        const device = localStorage.getItem("Device");
+        const Limits = localStorage.getItem("Limit");
+
+        const response = await axiosInstance.get("/getData",{
+          params:{
+            Devices:device.toString(),
+            Limit:Limits
+          }
+        });
       if (response.status === 200) {
         set({
           data: response.data.data,
           lastData: response.data.lastData,
           activityStatus: response.data.activityStatus,
+          SelectedLimit:Limits,
         });
       }
     } catch (error) {
@@ -79,6 +92,24 @@ const useDataStore = create((set) => ({
       }
     }catch(error){
       console.error("getAscan error!", error);
+    }
+  },
+  getRespectiveDeviceList:async()=>{
+    try{
+      const device_name = localStorage.getItem("Device");
+
+      const getdevicelist  = await axiosInstance.get('/getDeviceList');
+      if(getdevicelist.status === 200){
+        const device = getdevicelist.data.data;
+        set({RespectiveDevice:device.NoS,
+          SelectedDevice:device_name
+        })
+      }else{
+        console.log("Error code happend...")
+      }
+
+    }catch(error){
+
     }
   },
    getAscanList: async () => {
