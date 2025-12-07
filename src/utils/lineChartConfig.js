@@ -147,6 +147,12 @@ export const getLineChartOptions = () => ({
           size: window.innerWidth > 1536 ? 8 : 7,
         },
       },
+      title: {
+        display: true,
+        text: "Time", // ✅ X Axis Label
+        color: "#2d2d2d",
+        font: { size: 10, weight: "bold" },
+      },
     },
     y: {
        grid: {
@@ -158,6 +164,12 @@ export const getLineChartOptions = () => ({
         font: {
           size: window.innerWidth > 1536 ? 8 : 7,
         },
+      },
+      title: {
+        display: true,
+        text: "Thickness(mm)", // ✅ X Axis Label
+        color: "#2d2d2d",
+        font: { size: 10, weight: "bold" },
       },
       beginAtZero: true,
     },

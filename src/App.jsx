@@ -15,12 +15,13 @@ import NotFound from "./components/App/NotFound";
 import ProtectedRoute from "./utils/protectedRoute";
 import Configure from "./components/SuperAdmin/Configure";
 import Ascan from "./components/SuperAdmin/Ascan/Ascan";
+import Otheroption from "./components/SuperAdmin/Otheroption/Otheroption";
 
 const App = () => {
   const location = useLocation();
 
   // prettier-ignore
-  const pathsToHideNavbar = ["/", "/reports", "/analytics", "/settings", "/Admin","/admin",'/admin/configure','/admin/Ascan'];
+  const pathsToHideNavbar = ["/", "/reports", "/analytics", "/settings", "/Admin","/admin",'/admin/configure','/admin/Ascan','/admin/other-option'];
   const hideNavbar = pathsToHideNavbar.includes(location.pathname);
 
   return (
@@ -73,6 +74,7 @@ const App = () => {
           <Route path="/admin/configure" element={<Configure />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/Ascan" element={<Ascan />} />
+          <Route path='/admin/other-option' element={<Otheroption/>}/>
         </Route>
 
         {/* 404 handler */}

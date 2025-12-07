@@ -53,7 +53,7 @@ const Navbar = () => {
                 >
                   <button
                     className={`hover-effect flex items-center gap-1 hover:from-[#4F8CFF] to-[#2F6BFF]  ${
-                    activePath === route || activePath === "/admin/configure" || activePath === "/admin/Ascan" || activePath ==="/admin/access-db"
+                    activePath === route || activePath === "/admin/configure" ||activePath === '/admin/other-option'|| activePath === "/admin/Ascan" || activePath ==="/admin/access-db"
                       ? "bg-white/30 text-[#38CE3C] border p-1 border-[#38CE3C] rounded-lg  transition-all duration-300"
                       : "text-gray-200 hover:bg-white/20 hover:text-[#38CE3C] rounded-lg p-1 "
                   }`}

@@ -8,6 +8,8 @@ import AscanDropdown from "./AscanDropdown";
 import { MdOutlineRestartAlt } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
 import { SiTicktick } from "react-icons/si";
+import { MdOutlineCancel } from "react-icons/md";
+import AscanDownload from "./AscanDownload";
 
 const Ascan = () => {
   const projectdata = useDataStore((s) => s.getprojectdata);
@@ -23,6 +25,7 @@ const Ascan = () => {
   const Msps = useAdminStore((s) => s.Msps);
   const start = useAdminStore((s) => s.start);
   const Stop = useAdminStore((s) => s.Stop);
+
   const setSettingsDetails = useAdminStore((s) => s.setSettingsDetails);
   const DevicesetState = paramters((s) => s.setState);
   const Deviceselect = paramters((s) => s.Deviceselect);
@@ -31,12 +34,15 @@ const Ascan = () => {
   const chartRef = useRef(null);
   const resetState = useAdminStore((s) => s.resetState);
   const Ascan_Status = paramters((s) => s.Ascan_Status);
+  const setPeak = useAdminStore((s)=>s.setPeak)
 
   useEffect(() => {
+    resetState();
+  
     projectdata("GetProjectDevice");
   }, []);
 
-  console.log("Ascan_Status=", Ascan_Status);
+  console.log("ProcessName=",ProcessName)
   return (
     <div className="h-[90%] w-full p-4 flex gap-4 ">
       {/* Sidebar / Form */}
@@ -60,6 +66,7 @@ const Ascan = () => {
               resetState();
               setState({ UserProjectName: val.value });
               setSettingsDetails("GetSettingsDatas");
+             
             }}
             placeholder="Select Device"
             className="text-center"
@@ -70,12 +77,10 @@ const Ascan = () => {
           {[
             { label: "Pulse Width", value: Pulse_width, name: "Pulse_width" },
             { label: "Amplitude", value: Amplitude, name: "Amplitude" },
-            { label: "Frequency", value: Frequency, name: "Frequency" },
+            { label: "Mode", value: Frequency, name: "Frequency" },
             { label: "Gain", value: Gain, name: "Gain" },
             { label: "Filter", value: Filter, name: "Filter" },
-            { label: "Msps", value: Msps, name: "Msps" },
             { label: "Start", value: start, name: "start" },
-            { label: "Stop", value: Stop, name: "Stop" },
           ].map((item) => (
             <div key={item.name} className="flex flex-col gap-1">
               <label className="text-gray-600  font-medium">{item.label}</label>
@@ -123,20 +128,16 @@ const Ascan = () => {
               )}
             </div>
           </div>
-          <div
+          {ProcessName? (<div
             className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
-            // onClick={btn==="Dropdown"}
+            onClick={()=>{setPeak()}}
           >
             <CiLock />
-            Lock
-          </div>
-
-          <div
-            className="border border-red-500 text-red-500 px-3 py-1 rounded-md hover:bg-red-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
-            // onClick={btn==="Dropdown"}
-          >
-            Download
-          </div>
+            Peak
+          </div>):""}
+     
+          <AscanDownload/>
+         
           <div className="">
             <AscanDropdown />
           </div>
@@ -207,7 +208,7 @@ const Ascan = () => {
               <button
                 className="border px-2 rounded-xl text-green-400 hover:bg-green-400 hover:text-white hover-effect"
                 onClick={() => {
-                  setState({ Ascan: true });
+                  // setState({ Ascan: true });
                   setAscan("StartAscan");
                   DevicesetState({ TrailNamePopup: false });
                   resetState();
@@ -219,6 +220,7 @@ const Ascan = () => {
           </div>
         </div>
       )}
+      
     </div>
   );
 };

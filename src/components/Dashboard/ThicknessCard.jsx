@@ -15,6 +15,9 @@ const ThicknessCard = () => {
           <TbRulerMeasure2 className="text-orange-500 text-2xl"/>
           Thickness
         </div>
+        <div className="border">
+          
+        </div>
       </div>
     </div>
   );

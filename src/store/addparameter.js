@@ -20,5 +20,7 @@ const paramters = create((set, get) => ({
   Ascan_Status: null,
   setState: ( partial) => set(partial),
 
+
+  
 }));
 export default paramters;

@@ -48,26 +48,26 @@ const useAdminStore = create((set, get) => ({
   //settings page
   Pulse_width: "",
   Amplitude: "",
-  Frequency: "",
+  Mode: "",
   Filter: "",
   Gain: "",
-  Msps: "",
   start: "",
-  Stop: "",
 
   //Ascan settings:
   Ascan_btn: "",
   Ascan: false,
   Ascan_Datas: [],
+  x_axis: [],
   ProcessName: "",
   SaveTags: false,
   markers: [],
   lineData: [{ labels: [], datasets: [] }],
   zoomKey: 0,
-
+  AscanLog: false,
   //ascan start stop positions
-  start:"",
-  stop:"",
+  start: "",
+
+  SubChildSidebar: "1",
 
   setState: (partial) => set(partial),
 
@@ -116,7 +116,6 @@ const useAdminStore = create((set, get) => ({
   //   set admin data
   setAdminData: async () => {
     const { requestFor, userId, newPassword, getAdminData } = get();
-
     try {
       const response = await axiosInstance.post("/setAdminData", {
         requestFor,
@@ -208,13 +207,11 @@ const useAdminStore = create((set, get) => ({
     const {
       Pulse_width,
       Amplitude,
-      Frequency,
+      Mode,
       Filter,
       Gain,
-      Msps,
       start,
       UserProjectName,
-      Stop,
     } = get();
     try {
       if (msg === "GetSettings") {
@@ -223,18 +220,16 @@ const useAdminStore = create((set, get) => ({
             msg,
             Pulse_width,
             Amplitude,
-            Frequency,
+            Mode,
             Filter,
             Gain,
-            Msps,
             start,
             UserProjectName,
-            Stop,
           },
         });
 
         if (res.status === 200) {
-          console.log("yes success");
+          toast.success("Successfully Saved..")
         }
       } else if (msg === "GetSettingsDatas") {
         const res = await axiosInstance.get("/Add-Device-Setting", {
@@ -250,12 +245,10 @@ const useAdminStore = create((set, get) => ({
           set({
             Pulse_width: response_data.Pulse_width,
             Amplitude: response_data.Amplitude,
-            Frequency: response_data.Frequency,
+            Mode: response_data.Mode,
             Filter: response_data.Filter,
             Gain: response_data.Gain,
-            Msps: response_data.Msps,
             start: response_data.start,
-            Stop: response_data.Stop,
             // Ascan: res.data.ascan_Status,
           });
         }
@@ -265,40 +258,73 @@ const useAdminStore = create((set, get) => ({
     }
   },
 
+  setPeak: async (msg) => {
+    const { ProcessName, markers } = get();
+    console.log("ProcessName=", ProcessName);
+    console.log("markers=", markers)
+    try {
+      const apires = await axiosInstance.get("/AssignPeak", {
+        params: {
+          ProcessName: ProcessName,
+          markers: JSON.stringify(markers)
+        }
+      });
+      console.log("response from the apires", apires)
+
+    } catch (error) {
+      console.error("Error datas", error)
+    }
+  },
+
+
   setAscan: async (msg) => {
-    const { UserProjectName, ProcessName, markers, Ascan_Datas, SaveTags } =
+    const { UserProjectName, ProcessName, markers, AscanLog, Ascan, SaveTags } =
       get();
     // console.log("messages=",msg);
     try {
       if (msg === "StartAscan") {
-        await axiosInstance.get("/SetAscan", {
-          params: {
-            msg,
-            UserProjectName,
-            ProcessName: `${UserProjectName}:${ProcessName}`,
-          },
-        });
+        try {
+          const res = await axiosInstance.get("/SetAscan", {
+            params: {
+              msg,
+              UserProjectName,
+              ProcessName: `${UserProjectName}:${ProcessName}`,
+            },
+          });
+          set({
+            Ascan: true,
+          })
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            console.log("Ascan Process name already exists...");
+            toast.error("The process name is already in use and remains incomplete.");
+          } else {
+            console.log("Other error:", error);
+          }
+        }
+
       } else if (msg === "GetAscan") {
-        // console.log("Ascan Api being Called...")
+        console.log("Ascan Api being Called...")
         const res = await axiosInstance.get("/SetAscan", {
           params: {
             msg,
             UserProjectName,
             ProcessName,
+            AscanLog,
           },
         });
         if (res) {
-          let lineOptions="";
+          let lineOptions = "";
           const response = res.data.ascan;
-          const hasAtSymbol = response.some((item) => item.As.includes("@"));
-          // console.log("hasAtSymbol=",response)
+          const xaxis = res.data.x_axis;
+          const hasAtSymbol = false
           const Processtag = res.data.process_tags.markers;
           if (Processtag) {
-             lineOptions = JSON.parse(Processtag).map((data) => ({
-              x: data.x,
-              y: data.y,
-              label: data.label, // same label
-              value: data.value, // same value
+            lineOptions = JSON.parse(Processtag).map((data) => ({
+              x: data?.x ?? 0,
+              y: data?.y ?? 0,
+              label: data?.label ?? "",
+              value: data?.value ?? "",
             }));
           }
 
@@ -306,20 +332,17 @@ const useAdminStore = create((set, get) => ({
             set({
               Ascan: false,
               markers: lineOptions,
-              start:res.data.process_tags.start,
-              stop:res.data.process_tags.Stop
+              start: res.data.process_tags.start,
             });
           }
           set({
             Ascan_Datas: response,
+            x_axis: xaxis,
             markers: lineOptions,
-            start:res.data.process_tags.start,
-            stop:res.data.process_tags.Stop
+            start: res.data.process_tags.start,
           });
         }
       } else if (msg === "StoreTags") {
-        // console.log("=======yess======", markers);
-        // console.log("SaveTags==", ProcessName);
         if (SaveTags === true) {
           const res = await axiosInstance.get("/SetAscan", {
             params: {
@@ -335,8 +358,10 @@ const useAdminStore = create((set, get) => ({
     }
   },
 
+
   resetState: () =>
     set({
+      AscanLog: false,
       users: [],
       userActivity: [],
       filterUser: "",
@@ -358,6 +383,11 @@ const useAdminStore = create((set, get) => ({
       Ascan_Datas: [],
       UserProjectName: "",
       lineData: [],
+      Pulse_width: "",
+      Amplitude: "",
+      Filter: "",
+      Gain: "",
+      start: "",
     }),
 }));
 

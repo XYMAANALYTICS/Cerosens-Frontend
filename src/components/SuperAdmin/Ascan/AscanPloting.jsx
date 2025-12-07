@@ -72,6 +72,8 @@ const AscanPloting = ({ chartRef }) => {
   const ascan_status = useAdminStore((s) => s.Ascan);
   const setAscan = useAdminStore((s) => s.setAscan);
   const Ascan_Datas = useAdminStore((s) => s.Ascan_Datas);
+  const x_axis = useAdminStore((s) => s.x_axis);
+
   const setState = useAdminStore((s) => s.setState);
   const SaveTags = useAdminStore((s) => s.SaveTags);
   const start = useAdminStore((s) => s.start);
@@ -79,23 +81,20 @@ const AscanPloting = ({ chartRef }) => {
   const zoomKey = useAdminStore((s) => s.zoomKey);
   const Ascan_Status = paramters((s) => s.Ascan_Status);
 
-    const Ascan_Status_setState = paramters((s) => s.setState);
+  const Ascan_Status_setState = paramters((s) => s.setState);
+  const [markerPixels, setMarkerPixels] = React.useState([]);
 
-  // console.log("zoom key", zoomKey)
-
-  // console.log("ascan_status=",ascan_status)
-  // 🔁 Fetch ASCAN data periodically
   useEffect(() => {
     let intervalId;
+    // console.log("ascan_status=",ascan_status)
     if (ascan_status === true) {
+      // console.log("api is calling===",ascan_status)
       intervalId = setInterval(() => {
         setAscan("GetAscan");
       }, 2000);
     } else if (ascan_status === false) {
-      // console.log("Clear everything");
       setState({
         lineData: { labels: [], datasets: [] },
-        // markers: [],
       });
     }
     return () => intervalId && clearInterval(intervalId);
@@ -103,32 +102,15 @@ const AscanPloting = ({ chartRef }) => {
 
   // console.log("ascan_status=",ascan_status)
   // 📊 Format ASCAN data
+
   useEffect(() => {
     if (!Ascan_Datas || Ascan_Datas.length === 0) return;
 
-    const allAmplitudes = Ascan_Datas.flatMap((d) =>
-      d.As ? d.As.split(",")
-  .map(v => v.trim())
-  .filter(v => v !== "" && !isNaN(v))
-  .map(Number)
- : []
-    );
-
-
-
-    const timestamps = Array.from({ length: allAmplitudes.length }, (_, i) =>
-      Number(
-        (
-          Number(start) +
-          (i * (Number(stop) - Number(start))) / (allAmplitudes.length - 1)
-        ).toFixed(3)
-      )
-    );
-
+    const cleaned = Ascan_Datas.slice(1, -1);
     const datasets = [
       {
         label: "A-scan Signal",
-        data: allAmplitudes,
+        data: cleaned,
         borderColor: "#0037BD",
         backgroundColor: "rgba(28,193,255,0.1)",
         borderWidth: 2,
@@ -138,9 +120,8 @@ const AscanPloting = ({ chartRef }) => {
         tension: 0.3,
       },
     ];
-
-    setState({ lineData: { labels: timestamps, datasets } });
-  }, [Ascan_Datas, setState]);
+    setState({ lineData: { labels: x_axis, datasets } });
+  }, [Ascan_Datas, x_axis, setState]);
 
   // 🎯 Handle chart click (add/remove markers)
   const onChartClick = (event) => {
@@ -181,8 +162,6 @@ const AscanPloting = ({ chartRef }) => {
       return;
     }
 
-
-
     // Limit to 2 markers
     if (markers.length >= 2) {
       alert("⚠️ You can only select two points!");
@@ -199,6 +178,30 @@ const AscanPloting = ({ chartRef }) => {
 
     setState({ markers: [...markers, newMarker] });
   };
+
+  useEffect(() => {
+    if (!chartRef.current || markers.length === 0) return;
+
+    const chart = chartRef.current;
+    const { x: xScale, y: yScale } = chart.scales;
+    if (!xScale || !yScale) return;
+
+    const newPixels = markers.map((marker) => ({
+      ...marker,
+      xPixel: xScale.getPixelForValue(marker.label),
+      yPixel: yScale.getPixelForValue(marker.value),
+    }));
+
+    setMarkerPixels(newPixels);
+  }, [chartRef.current, markers, lineData, zoomKey]);
+
+  // ✅ FIX: Move illegal state update into useEffect
+  useEffect(() => {
+    const hasAtSymbol =
+      Ascan_Datas?.some((d) => d.As && d.As.includes("@")) || null;
+
+    Ascan_Status_setState({ Ascan_Status: hasAtSymbol });
+  }, [Ascan_Datas]);
 
   const lineOptions = useMemo(
     () => ({
@@ -232,11 +235,18 @@ const AscanPloting = ({ chartRef }) => {
       scales: {
         x: {
           type: "linear",
-
+          min: x_axis[0], // Start exactly at 8.925
+          max: x_axis[x_axis.length - 1], // End at last valu
           grid: { color: "#858585" },
           ticks: {
             color: "#262626",
             font: { size: window.innerWidth > 1536 ? 8 : 7 },
+          },
+          title: {
+            display: true,
+            text: "Time(ns)", // ✅ X Axis Label
+            color: "#2d2d2d",
+            font: { size: 10, weight: "bold" },
           },
         },
         y: {
@@ -245,14 +255,18 @@ const AscanPloting = ({ chartRef }) => {
             color: "#262626",
             font: { size: window.innerWidth > 1536 ? 8 : 7 },
           },
+          title: {
+            display: true,
+            text: "Amplitude(V)", // ✅ X Axis Label
+            color: "#2d2d2d",
+            font: { size: 10, weight: "bold" },
+          },
           beginAtZero: true,
         },
       },
     }),
-    []
+    [x_axis]
   );
-
-  const [markerPixels, setMarkerPixels] = React.useState([]);
 
   lineOptions.plugins.zoom.zoom.onZoom = ({ chart }) => {
     const xScale = chart.scales.x;
@@ -266,26 +280,9 @@ const AscanPloting = ({ chartRef }) => {
 
     setMarkerPixels(newPixels);
   };
-
-  useEffect(() => {
-    if (!chartRef.current || markers.length === 0) return;
-
-    const chart = chartRef.current;
-    const { x: xScale, y: yScale } = chart.scales;
-    if (!xScale || !yScale) return;
-
-    const newPixels = markers.map((marker) => ({
-      ...marker,
-      xPixel: xScale.getPixelForValue(marker.label),
-      yPixel: yScale.getPixelForValue(marker.value),
-    }));
-
-    setMarkerPixels(newPixels);
-  }, [chartRef.current, markers, lineData, zoomKey]);
-
-  const hasAtSymbol = Ascan_Datas?.some(d => d.As && d.As.includes("@"))||null;
-  Ascan_Status_setState({Ascan_Status:hasAtSymbol});
-  console.log("marker pixels", hasAtSymbol)
+  // const hasAtSymbol = Ascan_Datas?.some(d => d.As && d.As.includes("@"))||null;
+  // Ascan_Status_setState({Ascan_Status:hasAtSymbol});
+  console.log("lineData pixels", lineData);
 
   return (
     <div className="relative w-full h-full">
@@ -325,7 +322,7 @@ const AscanPloting = ({ chartRef }) => {
               </div>
             </div>
           )}
-    
+
           {markerPixels.map((marker, idx) => (
             <div
               key={idx}
