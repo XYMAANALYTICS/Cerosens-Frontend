@@ -388,6 +388,7 @@ const useAdminStore = create((set, get) => ({
       Filter: "",
       Gain: "",
       start: "",
+      Mode:"",
     }),
 }));
 

@@ -19,7 +19,7 @@ const Ascan = () => {
   const setAscan = useAdminStore((s) => s.setAscan);
   const Pulse_width = useAdminStore((s) => s.Pulse_width);
   const Amplitude = useAdminStore((s) => s.Amplitude);
-  const Frequency = useAdminStore((s) => s.Frequency);
+  const Mode = useAdminStore((s) => s.Mode);
   const Gain = useAdminStore((s) => s.Gain);
   const Filter = useAdminStore((s) => s.Filter);
   const Msps = useAdminStore((s) => s.Msps);
@@ -75,12 +75,12 @@ const Ascan = () => {
 
         <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-2">
           {[
-            { label: "Pulse Width", value: Pulse_width, name: "Pulse_width" },
-            { label: "Amplitude", value: Amplitude, name: "Amplitude" },
-            { label: "Mode", value: Frequency, name: "Frequency" },
-            { label: "Gain", value: Gain, name: "Gain" },
+            { label: "Pulse Width(µs)", value: Pulse_width, name: "Pulse_width" },
+            { label: "Amplitude(V)", value: Amplitude, name: "Amplitude" },
+            { label: "Mode", value: Mode, name: "Mode" },
+            { label: "Gain(dB)", value: Gain, name: "Gain" },
             { label: "Filter", value: Filter, name: "Filter" },
-            { label: "Start", value: start, name: "start" },
+            { label: "Start(ns)", value: start, name: "start" },
           ].map((item) => (
             <div key={item.name} className="flex flex-col gap-1">
               <label className="text-gray-600  font-medium">{item.label}</label>
