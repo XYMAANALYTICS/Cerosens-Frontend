@@ -21,6 +21,7 @@ import {
   Filler,
 } from "chart.js";
 import paramters from "../../../store/addparameter";
+import useDataStore from "../../../store/dataStore";
 
 ChartJS.register(
   CategoryScale,
@@ -79,10 +80,21 @@ const AscanPloting = ({ chartRef }) => {
   const start = useAdminStore((s) => s.start);
   const stop = useAdminStore((s) => s.stop);
   const zoomKey = useAdminStore((s) => s.zoomKey);
-  const Ascan_Status = paramters((s) => s.Ascan_Status);
 
   const Ascan_Status_setState = paramters((s) => s.setState);
   const [markerPixels, setMarkerPixels] = React.useState([]);
+  const DatasetState = useDataStore((s) => s.setState);
+
+  const Ascan_Status = paramters((s) => s.Ascan_Status);
+  const windowStart = useDataStore((s) => s.windowStart);
+  const thresholdNeg = useDataStore((s) => s.thresholdNeg);
+  const thresholdPos = useDataStore((s) => s.thresholdPos);
+  const windowStop = useDataStore((s) => s.windowStop);
+
+  const window2Start = useDataStore((s) => s.window2Start);
+  const w2thresholdNeg = useDataStore((s) => s.w2thresholdNeg);
+  const w2thresholdPos = useDataStore((s) => s.w2thresholdPos);
+  const window2Stop = useDataStore((s) => s.window2Stop);
 
   useEffect(() => {
     let intervalId;
@@ -203,14 +215,19 @@ const AscanPloting = ({ chartRef }) => {
     Ascan_Status_setState({ Ascan_Status: hasAtSymbol });
   }, [Ascan_Datas]);
 
+  // console.log("windowStart=", windowStart);
+  // console.log("windows end", windowStop);
+
   const lineOptions = useMemo(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+
       animation: { duration: 300 },
       plugins: {
         legend: { display: false, labels: { color: "#FFFFFF" } },
         tooltip: { enabled: true, titleColor: "#FFFFFF", bodyColor: "#FFFFFF" },
+
         zoom: {
           pan: { enabled: false, mode: "xy" },
           pinch: { enabled: window.innerWidth >= 768 },
@@ -229,6 +246,244 @@ const AscanPloting = ({ chartRef }) => {
             y: { min: "original", max: "original" },
           },
         },
+
+        annotation: {
+          annotations: {
+            thresholdPositive: {
+              type: "line",
+              yMin: thresholdPos,
+              yMax: thresholdPos,
+              xMin: windowStart, // 👈 start point
+              xMax: windowStop,
+              borderColor: "green",
+              borderWidth: 3,
+              borderDash: [5, 5],
+              draggable: true,
+              onDrag: (event) => {
+                const chart = event.chart;
+                const ann =
+                  chart.config.options.plugins.annotation.annotations
+                    .thresholdPositive;
+
+                console.log("Dragging...");
+                console.log("Current X Range:", ann.xMin, ann.xMax);
+              },
+              drawTime: "afterDatasetsDraw",
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W1TX1", `+${thresholdPos} V`],
+                position: "center",
+                backgroundColor: "green",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            thresholdNegative: {
+              type: "line",
+              yMin: thresholdNeg,
+              yMax: thresholdNeg,
+              borderColor: "red",
+              xMin: windowStart, // 👈 start point
+              xMax: windowStop,
+              borderWidth: 3,
+              borderDash: [5, 5],
+              // label: {
+              //   enabled: true,
+              //   content: `${thresholdNeg} V`,
+              //   position: "start",
+              //   backgroundColor: "rgba(255,0,0,0.2)",
+              // },
+              draggable: true,
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W1TX2 ", `${thresholdNeg} V`],
+                position: "center",
+                backgroundColor: "red",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            windowStartLine: {
+              type: "line",
+              yMin: thresholdPos,
+              yMax: thresholdNeg,
+              xMin: windowStart,
+              xMax: windowStart,
+              borderColor: "blue",
+              borderWidth: 3,
+              borderDash: [4, 4],
+              // label: {
+              //   enabled: true,
+              //   content: `Start ${windowStart}`,
+              //   position: "end",
+              // },
+              draggable: true,
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W1TY1", `${windowStart} µs`],
+                position: "center",
+                backgroundColor: "blue",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            windowStopLine: {
+              type: "line",
+              yMin: thresholdPos,
+              yMax: thresholdNeg,
+              xMin: windowStop,
+              xMax: windowStop,
+              borderColor: "purple",
+              borderWidth: 3,
+              borderDash: [4, 4],
+
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W1TY2", `${windowStop} µs`],
+                position: "center",
+                backgroundColor: "purple",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+              draggable: true,
+              // onDrag: (ctx) => {
+              //   const newX = ctx.chart.scales.x.getValueForPixel(
+              //     ctx.element.x
+              //   );
+
+              //   setWindowStop(parseFloat(newX.toFixed(3)));
+              // },
+            },
+
+            w2thresholdPositive: {
+              type: "line",
+              yMin: w2thresholdPos,
+              yMax: w2thresholdPos,
+              xMin: window2Start, // 👈 start point
+              xMax: window2Stop,
+              borderColor: "green",
+              borderWidth: 3,
+              borderDash: [5, 5],
+              draggable: true,
+              drawTime: "afterDatasetsDraw",
+
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W2TX1", `+${w2thresholdPos} V`],
+                position: "center",
+                backgroundColor: "green",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            w2thresholdNegative: {
+              type: "line",
+              yMin: w2thresholdNeg,
+              yMax: w2thresholdNeg,
+              borderColor: "red",
+              xMin: window2Start, // 👈 start point
+              xMax: window2Stop,
+              borderWidth: 3,
+              borderDash: [5, 5],
+              // label: {
+              //   enabled: true,
+              //   content: `${thresholdNeg} V`,
+              //   position: "start",
+              //   backgroundColor: "rgba(255,0,0,0.2)",
+              // },
+              draggable: true,
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W2TX2 ", `${w2thresholdNeg} V`],
+                position: "center",
+                backgroundColor: "red",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            window2StartLine: {
+              type: "line",
+              yMin: w2thresholdPos,
+              yMax: w2thresholdNeg,
+              xMin: window2Start,
+              xMax: window2Start,
+              borderColor: "blue",
+              borderWidth: 3,
+              borderDash: [4, 4],
+              // label: {
+              //   enabled: true,
+              //   content: `Start ${windowStart}`,
+              //   position: "end",
+              // },
+              draggable: true,
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W2TY1", `${window2Start} µs`],
+                position: "center",
+                backgroundColor: "blue",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+            },
+
+            window2StopLine: {
+              type: "line",
+              yMin: w2thresholdPos,
+              yMax: w2thresholdNeg,
+              xMin: window2Stop,
+              xMax: window2Stop,
+              borderColor: "purple",
+              borderWidth: 3,
+              borderDash: [4, 4],
+
+              label: {
+                display: true,
+                enabled: true,
+                content: ["W2TY2", `${window2Stop} µs`],
+                position: "center",
+                backgroundColor: "purple",
+                color: "white",
+                padding: 6,
+                borderRadius: 6,
+                textAlign: "center",
+              },
+              draggable: true,
+              // onDrag: (ctx) => {
+              //   const newX = ctx.chart.scales.x.getValueForPixel(
+              //     ctx.element.x
+              //   );
+
+              //   setWindowStop(parseFloat(newX.toFixed(3)));
+              // },
+            },
+          },
+        },
       },
       interaction: { mode: "index", intersect: false },
 
@@ -244,7 +499,7 @@ const AscanPloting = ({ chartRef }) => {
           },
           title: {
             display: true,
-            text: "Time(ns)", // ✅ X Axis Label
+            text: "Time(µs)", // ✅ X Axis Label
             color: "#2d2d2d",
             font: { size: 10, weight: "bold" },
           },
@@ -265,7 +520,16 @@ const AscanPloting = ({ chartRef }) => {
         },
       },
     }),
-    [x_axis]
+    [
+      x_axis,
+      windowStop,
+      windowStart,
+      thresholdNeg,
+      thresholdPos,
+      window2Stop,
+      window2Start,
+      w2thresholdNeg,
+    ]
   );
 
   lineOptions.plugins.zoom.zoom.onZoom = ({ chart }) => {
@@ -282,19 +546,144 @@ const AscanPloting = ({ chartRef }) => {
   };
   // const hasAtSymbol = Ascan_Datas?.some(d => d.As && d.As.includes("@"))||null;
   // Ascan_Status_setState({Ascan_Status:hasAtSymbol});
-  console.log("lineData pixels", lineData);
+  // console.log("lineData pixels", lineData);
 
   return (
     <div className="relative w-full h-full">
       {lineData.datasets && lineData.datasets.length > 0 ? (
         <>
-          <Line
-            ref={chartRef}
-            data={lineData}
-            options={lineOptions}
-            onClick={onChartClick}
-            height={200}
-          />
+          <div className="flex gap-1 p-1 h-[40%]">
+            {/* Window 1 */}
+            <div className="border p-3 rounded-lg bg-white shadow-sm w-[50%] h-[100%]">
+              <h2 className="font-semibold text-lg mb-2 text-center">
+                Window 1
+              </h2>
+
+              <div className=" grid grid-cols-2 gap-1">
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Threshold + (V)</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={thresholdPos}
+                    step="0.01"
+                    onChange={(e) =>
+                      DatasetState({ thresholdPos: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Threshold – (V)</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={thresholdNeg}
+                    step="0.01"
+                    onChange={(e) =>
+                      DatasetState({ thresholdNeg: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Window Start</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={windowStart}
+                    step="0.001"
+                    onChange={(e) =>
+                      DatasetState({ windowStart: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Window Stop</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={windowStop}
+                    step="0.001"
+                    onChange={(e) =>
+                      DatasetState({ windowStop: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Window 2 */}
+            <div className="border p-3 rounded-lg w-[50%] h-[100%] bg-white shadow-sm">
+              <h2 className="font-semibold text-lg mb-2 text-center">
+                Window 2
+              </h2>
+
+              <div className="grid grid-cols-2 gap-1">
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Threshold + (V)</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={w2thresholdPos}
+                    step="0.01"
+                    onChange={(e) =>
+                      DatasetState({ w2thresholdPos: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Threshold – (V)</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={w2thresholdNeg}
+                    step="0.01"
+                    onChange={(e) =>
+                      DatasetState({ w2thresholdNeg: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Window Start</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={window2Start}
+                    step="0.001"
+                    onChange={(e) =>
+                      DatasetState({ window2Start: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Window Stop</label>
+                  <input
+                    className="border px-2 py-1 rounded"
+                    type="number"
+                    value={window2Stop}
+                    step="0.001"
+                    onChange={(e) =>
+                      DatasetState({ window2Stop: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="h-[60%] w-[100%]">
+            <Line
+              ref={chartRef}
+              data={lineData}
+              options={lineOptions}
+              onClick={onChartClick}
+              height={200}
+            />
+          </div>
 
           {SaveTags && (
             <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">

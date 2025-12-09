@@ -22,6 +22,17 @@ const useDataStore = create((set, get) => ({
   TofTotalCount: 0,
   TofCurrentPage: 1,
   TofTotalPages: 0,
+  AllTofdata: [],
+
+  windowStop: "",
+  windowStart: "",
+  thresholdNeg: "",
+  thresholdPos: "",
+
+  window2Stop: "",
+  window2Start: "",
+  w2thresholdNeg: "",
+  w2thresholdPos: "",
 
   setState: (partial) => set(partial),
 
@@ -139,7 +150,7 @@ const useDataStore = create((set, get) => ({
   getAscanLogList: async () => {
     try {
       const response = await axiosInstance.get("/getAscanLogList");
-      console.log("GetAscanList=", response.data.data)
+      // console.log("GetAscanList=", response.data.data)
       if (response.status === 200) {
         set({
           GetAscanLogList: response.data.data,
@@ -150,8 +161,8 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-  downloadTofCSV: async () => {
-    const { Tof_from_date, Tof_To_date } = get();
+  downloadTofCSV: async (msg) => {
+    const { Tof_from_date, Tof_To_date, AllTofdata } = get();
 
     if (!Tof_from_date || !Tof_To_date) {
       toast.error("Please select From Date and To Date");
@@ -168,30 +179,36 @@ const useDataStore = create((set, get) => ({
       });
 
       const data = res.data.data;
-
       if (!data || data.length === 0) {
         toast.error("No records found");
         return;
       }
+      if (msg === "2") {
+        console.log("alldata=",data)
+        set({ AllTofdata: data });
+      } else {
 
-      // Convert JSON → CSV
-      const header = Object.keys(data[0]).join(",");
-      const rows = data.map(obj =>
-        Object.values(obj).join(",")
-      );
+        // Convert JSON → CSV
+        const header = Object.keys(data[0]).join(",");
+        const rows = data.map(obj =>
+          Object.values(obj).join(",")
+        );
 
-      const csvContent = [header, ...rows].join("\n");
+        const csvContent = [header, ...rows].join("\n");
 
-      // Trigger download
-      const blob = new Blob([csvContent], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
+        // Trigger download
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
 
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "TofData.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "TofData.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+
 
     } catch (e) {
       console.log(e);
@@ -231,9 +248,52 @@ const useDataStore = create((set, get) => ({
       console.log("TOF fetch error:", error);
     }
   },
+  setWindowValue: async (msg) => {
+    const { windowStop, windowStart, thresholdNeg, thresholdPos, window2Stop, window2Start, w2thresholdNeg, w2thresholdPos } = get()
+    try {
+      if (msg === 1) {
+        const response = await axiosInstance.post("/setWindows", {
+          msg: msg,
+          DeviceId: "XY001",
+          window1_start: windowStart,
+          window1_stop: windowStop,
+          w1T_pos: thresholdPos,
+          W1T_Neg: thresholdNeg,
+          window2_start: window2Start,
+          window2_stop: window2Stop,
+          w2T_pos: w2thresholdPos,
+          W2T_Neg: w2thresholdNeg,
+        });
+
+        if(response.status === 200){
+          toast.success("Peak settings Saved..")
+        }
+      } else if (msg === 2) {
+        const response = await axiosInstance.post("/setWindows", {
+          msg: msg,
+          DeviceId: "XY001"
+        })
+        set({
+          windowStart: response.data.data.window1_start,
+          windowStop: response.data.data.window1_stop,
+          thresholdPos: response.data.data.w1T_pos,
+          thresholdNeg: response.data.data.W1T_Neg,
+          window2Start: response.data.data.window2_start,
+          window2Stop: response.data.data.window2_stop,
+          w2thresholdPos: response.data.data.w1T_pos,
+          w2thresholdNeg: response.data.data.W2T_Neg,
+        })
+        // console.log("response data=", response.data)
+
+      }
+
+    } catch (error) {
+      console.log("error", error)
+    }
+  },
 
 
-  resetState: () => set({ data: [], UserDeviceist: [], GetAscanList: [], GetAscanLogList: [] }),
+  resetState: () => set({ data: [], UserDeviceist: [], AllTofdata: [], GetAscanList: [], GetAscanLogList: [] }),
 }));
 
 export default useDataStore;

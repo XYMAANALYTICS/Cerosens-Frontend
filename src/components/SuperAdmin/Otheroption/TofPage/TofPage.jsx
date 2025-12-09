@@ -4,71 +4,108 @@ import { IoIosCloudDownload } from "react-icons/io";
 import { FaTable } from "react-icons/fa";
 import useDataStore from "../../../../store/dataStore";
 import "react-datepicker/dist/react-datepicker.css";
+import { FaChartLine } from "react-icons/fa6";
+import PlotPopup from "./PlotPopup";
+import paramters from "../../../../store/addparameter";
+import { RiSkipRightLine } from "react-icons/ri";
+import { RiSkipLeftLine } from "react-icons/ri";
 
 const TofPage = () => {
   const tof_fromdate = useDataStore((s) => s.Tof_from_date);
   const tof_todate = useDataStore((s) => s.Tof_To_date);
   const setState = useDataStore((s) => s.setState);
+  const parameterssetState = paramters((s) => s.setState);
+  const status_of_popup = paramters((s) => s.Tofplot_Status);
   const getTofDate = useDataStore((s) => s.getTofDate);
   const TofData = useDataStore((s) => s.TofData);
-  const TofTotalCount = useDataStore((s) => s.TofTotalCount);
   const TofCurrentPage = useDataStore((s) => s.TofCurrentPage);
   const TofTotalPages = useDataStore((s) => s.TofTotalPages);
-const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
+  const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
 
-
+  console.log("Tofplot_Status=",status_of_popup)
   return (
-    <div className="h-[100%] w-[100%] flex flex-col gap-2">
-      <div className="h-[10%] border rounded-xl flex items-center justify-end px-4 gap-4">
-        {/* Download Button */}
-        <div className="border rounded-2xl p-2 border-[#38CE3C] bg-[#d6f6d7] hover:cursor-pointer hover:scale-110 transition-transform"  onClick={downloadTofCSV}
->
+    <div className="h-full w-full flex flex-col gap-3 bg-[#f5f9ff] p-4 rounded-xl">
+      {/* -----------------------------------
+          TOP FILTER SECTION 
+      ----------------------------------- */}
+      <div className="h-[12%] bg-white  shadow-sm rounded-xl flex items-center justify-between px-6 py-3">
+        {/* LEFT: Download Button */}
+        <div
+          className="border rounded-2xl p-2 border-[#38CE3C] bg-[#d6f6d7] hover:cursor-pointer hover:scale-110 transition-transform"
+          onClick={() => downloadTofCSV("1")}
+        >
           <IoIosCloudDownload className="text-[#38CE3C] text-xl" />
         </div>
 
-        {/* Date Filters */}
-        <div className="flex items-center justify-between gap-6">
+        {/* RIGHT: Filters */}
+        <div className="flex items-center justify-between gap-8">
           {/* From Date */}
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Select From Date</span>
+          <div className="">
+            <span className="text-sm font-medium text-gray-700">
+              Select From Date :{" "}
+            </span>
             <DatePicker
               placeholderText="Select"
               selected={tof_fromdate}
               onChange={(date) => setState({ Tof_from_date: date })}
-              className="border rounded-md p-1"
+              className="border rounded-md p-1 mt-1"
             />
           </div>
 
           {/* To Date */}
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">Select To Date</span>
+          <div className="">
+            <span className="text-sm font-medium text-gray-700">
+              Select To Date :{" "}
+            </span>
             <DatePicker
               placeholderText="Select"
               selected={tof_todate}
               onChange={(date) => setState({ Tof_To_date: date })}
-              className="border rounded-md p-1"
+              className="border rounded-md p-1 mt-1"
             />
           </div>
 
-          {/* View Button */}
+          {/* View Table */}
           <div
-            className="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100"
-            onClick={() => getTofDate(1)} // page 1
+            className="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 transition border-red-500 bg-red-300"
+            onClick={() => getTofDate(1)}
           >
-            <FaTable />
-            <span>View</span>
+            <FaTable className="" />
+            <span className="font-medium ">View</span>
+          </div>
+
+          {/* Plot Popup */}
+          {status_of_popup && (
+            <PlotPopup
+              onClose={() => parameterssetState({ Tofplot_Status: false })}
+              data={TofData}
+            />
+          )}
+
+          {/* Plot Button */}
+          <div
+            className="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer border-green-400 bg-green-200 hover:bg-green-200 transition"
+            onClick={() => {
+              parameterssetState({ Tofplot_Status: true }), downloadTofCSV("2");
+            }}
+          >
+            <FaChartLine />
+            <span className="font-medium">Plot</span>
           </div>
         </div>
       </div>
 
-      {/* Results Area */}
-      <div className="h-[90%] border rounded-xl flex flex-col p-4">
-        {/* Table Box (takes full height) */}
-        <div className="flex-1 overflow-auto border rounded-lg">
+      {/* -----------------------------------
+          RESULTS TABLE SECTION 
+      ----------------------------------- */}
+      <div className="h-[88%] bg-white  shadow-sm rounded-xl flex flex-col p-3">
+        <div className="flex-1 overflow-auto rounded-lg">
           <table className="min-w-full border-collapse text-sm">
-            <thead className="bg-gray-100 sticky top-0 z-10">
+            <thead className="bg-[#bae9bc] sticky top-0 z-10">
               <tr>
                 <th className="border p-2 text-left">S.No</th>
+                <th className="border p-2 text-left">First Peak (µs)</th>
+                <th className="border p-2 text-left">Second Peak (µs)</th>
                 <th className="border p-2 text-left">TOF</th>
                 <th className="border p-2 text-left">Thickness</th>
                 <th className="border p-2 text-left">Timestamp</th>
@@ -80,6 +117,8 @@ const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
                 TofData.map((row, index) => (
                   <tr key={index} className="odd:bg-white even:bg-gray-50">
                     <td className="border p-2">{index + 1}</td>
+                    <td className="border p-2">{row.T1}</td>
+                    <td className="border p-2">{row.T2}</td>
                     <td className="border p-2">{row.Tof}</td>
                     <td className="border p-2">{row.Thickness}</td>
                     <td className="border p-2">
@@ -90,7 +129,7 @@ const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
               ) : (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="6"
                     className="text-center border p-4 text-gray-500"
                   >
                     No data found
@@ -108,7 +147,7 @@ const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
             disabled={TofCurrentPage === 1}
             onClick={() => getTofDate(TofCurrentPage - 1)}
           >
-            Prev
+            <RiSkipLeftLine />
           </button>
 
           <span className="font-medium">
@@ -120,7 +159,7 @@ const downloadTofCSV = useDataStore((s) => s.downloadTofCSV);
             disabled={TofCurrentPage === TofTotalPages}
             onClick={() => getTofDate(TofCurrentPage + 1)}
           >
-            Next
+            <RiSkipRightLine />
           </button>
         </div>
       </div>

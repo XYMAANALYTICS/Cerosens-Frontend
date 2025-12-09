@@ -18,9 +18,8 @@ const paramters = create((set, get) => ({
   Deviceselect :false,
   TrailNamePopup :false,
   Ascan_Status: null,
+  Tofplot_Status:false,
   setState: ( partial) => set(partial),
-
-
   
 }));
 export default paramters;
