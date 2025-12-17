@@ -96,6 +96,8 @@ const AscanPloting = ({ chartRef }) => {
   const w2thresholdPos = useDataStore((s) => s.w2thresholdPos);
   const window2Stop = useDataStore((s) => s.window2Stop);
 
+  console.log("w2thresholdPos-",w2thresholdPos)
+
   useEffect(() => {
     let intervalId;
     // console.log("ascan_status=",ascan_status)
@@ -270,7 +272,7 @@ const AscanPloting = ({ chartRef }) => {
               },
               drawTime: "afterDatasetsDraw",
               label: {
-                display: true,
+                display: false,
                 enabled: true,
                 content: ["W1TX1", `+${thresholdPos} V`],
                 position: "center",
@@ -299,7 +301,7 @@ const AscanPloting = ({ chartRef }) => {
               // },
               draggable: true,
               label: {
-                display: true,
+                display: false,
                 enabled: true,
                 content: ["W1TX2 ", `${thresholdNeg} V`],
                 position: "center",
@@ -311,64 +313,64 @@ const AscanPloting = ({ chartRef }) => {
               },
             },
 
-            windowStartLine: {
-              type: "line",
-              yMin: thresholdPos,
-              yMax: thresholdNeg,
-              xMin: windowStart,
-              xMax: windowStart,
-              borderColor: "blue",
-              borderWidth: 3,
-              borderDash: [4, 4],
-              // label: {
-              //   enabled: true,
-              //   content: `Start ${windowStart}`,
-              //   position: "end",
-              // },
-              draggable: true,
-              label: {
-                display: true,
-                enabled: true,
-                content: ["W1TY1", `${windowStart} µs`],
-                position: "center",
-                backgroundColor: "blue",
-                color: "white",
-                padding: 6,
-                borderRadius: 6,
-                textAlign: "center",
-              },
-            },
+            // windowStartLine: {
+            //   type: "line",
+            //   yMin: thresholdPos,
+            //   yMax: thresholdNeg,
+            //   xMin: windowStart,
+            //   xMax: windowStart,
+            //   borderColor: "blue",
+            //   borderWidth: 3,
+            //   borderDash: [4, 4],
+            //   // label: {
+            //   //   enabled: true,
+            //   //   content: `Start ${windowStart}`,
+            //   //   position: "end",
+            //   // },
+            //   draggable: true,
+            //   label: {
+            //     display: false,
+            //     enabled: true,
+            //     content: ["W1TY1", `${windowStart} µs`],
+            //     position: "center",
+            //     backgroundColor: "blue",
+            //     color: "white",
+            //     padding: 6,
+            //     borderRadius: 6,
+            //     textAlign: "center",
+            //   },
+            // },
 
-            windowStopLine: {
-              type: "line",
-              yMin: thresholdPos,
-              yMax: thresholdNeg,
-              xMin: windowStop,
-              xMax: windowStop,
-              borderColor: "purple",
-              borderWidth: 3,
-              borderDash: [4, 4],
+            // windowStopLine: {
+            //   type: "line",
+            //   yMin: thresholdPos,
+            //   yMax: thresholdNeg,
+            //   xMin: windowStop,
+            //   xMax: windowStop,
+            //   borderColor: "purple",
+            //   borderWidth: 3,
+            //   borderDash: [4, 4],
 
-              label: {
-                display: true,
-                enabled: true,
-                content: ["W1TY2", `${windowStop} µs`],
-                position: "center",
-                backgroundColor: "purple",
-                color: "white",
-                padding: 6,
-                borderRadius: 6,
-                textAlign: "center",
-              },
-              draggable: true,
-              // onDrag: (ctx) => {
-              //   const newX = ctx.chart.scales.x.getValueForPixel(
-              //     ctx.element.x
-              //   );
+            //   label: {
+            //     display: false,
+            //     enabled: true,
+            //     content: ["W1TY2", `${windowStop} µs`],
+            //     position: "center",
+            //     backgroundColor: "purple",
+            //     color: "white",
+            //     padding: 6,
+            //     borderRadius: 6,
+            //     textAlign: "center",
+            //   },
+            //   draggable: true,
+            //   // onDrag: (ctx) => {
+            //   //   const newX = ctx.chart.scales.x.getValueForPixel(
+            //   //     ctx.element.x
+            //   //   );
 
-              //   setWindowStop(parseFloat(newX.toFixed(3)));
-              // },
-            },
+            //   //   setWindowStop(parseFloat(newX.toFixed(3)));
+            //   // },
+            // },
 
             w2thresholdPositive: {
               type: "line",
@@ -383,7 +385,7 @@ const AscanPloting = ({ chartRef }) => {
               drawTime: "afterDatasetsDraw",
 
               label: {
-                display: true,
+                display: false,
                 enabled: true,
                 content: ["W2TX1", `+${w2thresholdPos} V`],
                 position: "center",
@@ -412,7 +414,7 @@ const AscanPloting = ({ chartRef }) => {
               // },
               draggable: true,
               label: {
-                display: true,
+                display: false,
                 enabled: true,
                 content: ["W2TX2 ", `${w2thresholdNeg} V`],
                 position: "center",
@@ -424,64 +426,64 @@ const AscanPloting = ({ chartRef }) => {
               },
             },
 
-            window2StartLine: {
-              type: "line",
-              yMin: w2thresholdPos,
-              yMax: w2thresholdNeg,
-              xMin: window2Start,
-              xMax: window2Start,
-              borderColor: "blue",
-              borderWidth: 3,
-              borderDash: [4, 4],
-              // label: {
-              //   enabled: true,
-              //   content: `Start ${windowStart}`,
-              //   position: "end",
-              // },
-              draggable: true,
-              label: {
-                display: true,
-                enabled: true,
-                content: ["W2TY1", `${window2Start} µs`],
-                position: "center",
-                backgroundColor: "blue",
-                color: "white",
-                padding: 6,
-                borderRadius: 6,
-                textAlign: "center",
-              },
-            },
+            // window2StartLine: {
+            //   type: "line",
+            //   yMin: w2thresholdPos,
+            //   yMax: w2thresholdNeg,
+            //   xMin: window2Start,
+            //   xMax: window2Start,
+            //   borderColor: "blue",
+            //   borderWidth: 3,
+            //   borderDash: [4, 4],
+            //   // label: {
+            //   //   enabled: true,
+            //   //   content: `Start ${windowStart}`,
+            //   //   position: "end",
+            //   // },
+            //   draggable: true,
+            //   label: {
+            //     display: false,
+            //     enabled: true,
+            //     content: ["W2TY1", `${window2Start} µs`],
+            //     position: "center",
+            //     backgroundColor: "blue",
+            //     color: "white",
+            //     padding: 6,
+            //     borderRadius: 6,
+            //     textAlign: "center",
+            //   },
+            // },
 
-            window2StopLine: {
-              type: "line",
-              yMin: w2thresholdPos,
-              yMax: w2thresholdNeg,
-              xMin: window2Stop,
-              xMax: window2Stop,
-              borderColor: "purple",
-              borderWidth: 3,
-              borderDash: [4, 4],
+            // window2StopLine: {
+            //   type: "line",
+            //   yMin: w2thresholdPos,
+            //   yMax: w2thresholdNeg,
+            //   xMin: window2Stop,
+            //   xMax: window2Stop,
+            //   borderColor: "purple",
+            //   borderWidth: 3,
+            //   borderDash: [4, 4],
 
-              label: {
-                display: true,
-                enabled: true,
-                content: ["W2TY2", `${window2Stop} µs`],
-                position: "center",
-                backgroundColor: "purple",
-                color: "white",
-                padding: 6,
-                borderRadius: 6,
-                textAlign: "center",
-              },
-              draggable: true,
-              // onDrag: (ctx) => {
-              //   const newX = ctx.chart.scales.x.getValueForPixel(
-              //     ctx.element.x
-              //   );
+            //   label: {
+            //     display: false,
+            //     enabled: true,
+            //     content: ["W2TY2", `${window2Stop} µs`],
+            //     position: "center",
+            //     backgroundColor: "purple",
+            //     color: "white",
+            //     padding: 6,
+            //     borderRadius: 6,
+            //     textAlign: "center",
+            //   },
+            //   draggable: true,
+            //   // onDrag: (ctx) => {
+            //   //   const newX = ctx.chart.scales.x.getValueForPixel(
+            //   //     ctx.element.x
+            //   //   );
 
-              //   setWindowStop(parseFloat(newX.toFixed(3)));
-              // },
-            },
+            //   //   setWindowStop(parseFloat(newX.toFixed(3)));
+            //   // },
+            // },
           },
         },
       },
@@ -529,6 +531,7 @@ const AscanPloting = ({ chartRef }) => {
       window2Stop,
       window2Start,
       w2thresholdNeg,
+      w2thresholdPos
     ]
   );
 

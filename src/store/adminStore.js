@@ -66,6 +66,9 @@ const useAdminStore = create((set, get) => ({
   AscanLog: false,
   //ascan start stop positions
   start: "",
+  ascan_toggle_switch:false,
+  Fromdate:"",
+  Todate:"",
 
   SubChildSidebar: "1",
 
@@ -389,6 +392,7 @@ const useAdminStore = create((set, get) => ({
       Gain: "",
       start: "",
       Mode:"",
+      ascan_toggle_switch:false,
     }),
 }));
 

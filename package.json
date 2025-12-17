@@ -21,6 +21,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^12.18.1",
     "i": "^0.3.7",
+    "lazy": "^1.0.11",
     "npm": "^11.6.0",
     "open-props": "^1.7.15",
     "postcss-jit-props": "^1.0.16",
@@ -31,6 +32,7 @@
     "react-dropdown": "^1.11.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^6.30.0",
+    "react-switch": "^7.1.0",
     "react-toastify": "^11.0.5",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.6"

@@ -34,6 +34,7 @@ const useDataStore = create((set, get) => ({
   w2thresholdNeg: "",
   w2thresholdPos: "",
 
+
   setState: (partial) => set(partial),
 
   getData: async () => {
@@ -280,7 +281,7 @@ const useDataStore = create((set, get) => ({
           thresholdNeg: response.data.data.W1T_Neg,
           window2Start: response.data.data.window2_start,
           window2Stop: response.data.data.window2_stop,
-          w2thresholdPos: response.data.data.w1T_pos,
+          w2thresholdPos: response.data.data.w2T_pos,
           w2thresholdNeg: response.data.data.W2T_Neg,
         })
         // console.log("response data=", response.data)
