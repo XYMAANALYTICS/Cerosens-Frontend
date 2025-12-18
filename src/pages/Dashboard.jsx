@@ -28,7 +28,7 @@ const setState = useDataStore((s)=>s.setState)
 
   console.log("SelectedLimit=",SelectedLimit)
   return (
-    <div className="h-[91%] flex flex-col items-start gap-2 text-gray-200 p-1">
+    <div className="h-[100%] flex flex-col items-start gap-2 text-gray-200 p-1 border">
       {/* cards */}
       <div className="flex gap-2 w-[100%] h-[50%]">
         <div className="w-[50%]">

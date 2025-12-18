@@ -8,7 +8,6 @@ const MasterParent = () => {
   const resetState = useAdminStore((s) => s.resetState);
 
   const renderPage = () => {
-    console.log("SubChildSidebar=",SubChildSidebar)
     resetState();
     switch (SubChildSidebar) {
       case "1":
@@ -24,7 +23,7 @@ const MasterParent = () => {
     }
   };
 
-  return <div className="h-full w-full">{renderPage()}</div>;
+  return <div className="h-[100%] w-[100%]">{renderPage()}</div>;
 };
 
 export default MasterParent;

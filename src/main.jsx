@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter future={{v7_startTransition: true }}>
-    <div className="parent-bg">
+    <div className="parent-bg h-screen">
     <App />
     </div>
   </BrowserRouter>

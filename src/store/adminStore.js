@@ -60,6 +60,7 @@ const useAdminStore = create((set, get) => ({
   x_axis: [],
   ProcessName: "",
   SaveTags: false,
+  DeleteTags:false,
   markers: [],
   lineData: [{ labels: [], datasets: [] }],
   zoomKey: 0,
@@ -261,23 +262,23 @@ const useAdminStore = create((set, get) => ({
     }
   },
 
-  setPeak: async (msg) => {
-    const { ProcessName, markers } = get();
-    console.log("ProcessName=", ProcessName);
-    console.log("markers=", markers)
-    try {
-      const apires = await axiosInstance.get("/AssignPeak", {
-        params: {
-          ProcessName: ProcessName,
-          markers: JSON.stringify(markers)
-        }
-      });
-      console.log("response from the apires", apires)
+  // setPeak: async (msg) => {
+  //   const { ProcessName, markers } = get();
+  //   console.log("ProcessName=", ProcessName);
+  //   console.log("markers=", markers)
+  //   try {
+  //     const apires = await axiosInstance.get("/AssignPeak", {
+  //       params: {
+  //         ProcessName: ProcessName,
+  //         markers: JSON.stringify(markers)
+  //       }
+  //     });
+  //     console.log("response from the apires", apires)
 
-    } catch (error) {
-      console.error("Error datas", error)
-    }
-  },
+  //   } catch (error) {
+  //     console.error("Error datas", error)
+  //   }
+  // },
 
 
   setAscan: async (msg) => {
@@ -318,6 +319,7 @@ const useAdminStore = create((set, get) => ({
         });
         if (res) {
           let lineOptions = "";
+          console.log("datas=",res.data)
           const response = res.data.ascan;
           const xaxis = res.data.x_axis;
           const hasAtSymbol = false
@@ -329,6 +331,11 @@ const useAdminStore = create((set, get) => ({
               label: data?.label ?? "",
               value: data?.value ?? "",
             }));
+          }
+          if(response.includes("@")){
+            set({
+            Ascan: false,
+            })
           }
 
           if (hasAtSymbol) {
@@ -346,7 +353,10 @@ const useAdminStore = create((set, get) => ({
           });
         }
       } else if (msg === "StoreTags") {
-        if (SaveTags === true) {
+
+        if (SaveTags === true || DeleteTags === true) {
+                            console.log("markers=",ProcessName,ProcessName)
+
           const res = await axiosInstance.get("/SetAscan", {
             params: {
               msg,
@@ -354,6 +364,9 @@ const useAdminStore = create((set, get) => ({
               ProcessName,
             },
           });
+          if(res.status === 200){
+            toast.success("Peak Saved!!!")
+          }
         }
       }
     } catch (error) {
@@ -361,6 +374,7 @@ const useAdminStore = create((set, get) => ({
     }
   },
 
+  resetparticular:()=>set({markers:[]}),
 
   resetState: () =>
     set({
@@ -383,6 +397,7 @@ const useAdminStore = create((set, get) => ({
       Ascan: "",
       ProcessName: "",
       SaveTags: false,
+      DeleteTags:false,
       Ascan_Datas: [],
       UserProjectName: "",
       lineData: [],

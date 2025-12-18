@@ -128,13 +128,13 @@ const Ascan = () => {
               )}
             </div>
           </div>
-          {ProcessName? (<div
+          {/* {ProcessName? (<div
             className="border border-cyan-500 text-cyan-500 px-3 py-1 rounded-md hover:bg-cyan-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
             onClick={()=>{setPeak()}}
           >
             <CiLock />
             Peak
-          </div>):""}
+          </div>):""} */}
      
           <AscanDownload/>
          
@@ -142,21 +142,7 @@ const Ascan = () => {
             <AscanDropdown />
           </div>
           {/* ))} */}
-          <div
-            className="border border-green-500 text-green-500 px-3 py-1 rounded-md hover:bg-green-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
-            onClick={() => {
-              if (chartRef.current) {
-                chartRef.current.resetZoom();
-                setAscan("StoreTags");
-                setState((prev) => ({
-                  ...prev,
-                  zoomKey: prev.zoomKey + 1,
-                }));
-              }
-            }}
-          >
-            <MdOutlineRestartAlt />
-          </div>
+         
           <div
             className="border border-green-500 text-green-500 px-3 py-1 rounded-md hover:bg-green-500 hover:text-white cursor-pointer transition-colors duration-200 flex items-center justify-center"
             onClick={() => {

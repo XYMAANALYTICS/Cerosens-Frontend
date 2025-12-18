@@ -14,7 +14,7 @@ const Ascanlog = () => {
     setWindowValue(2);
   }, []);
   return (
-    <div className="w-[100%] h-[100%] flex flex-col gap-2">
+    <div className="w-[100%] h-[100%] flex flex-col gap-2 ">
       <div className="h-[10%] border border-gray-700 rounded-xl flex items-center justify-between p-2">
         <div className="flex gap-2">
           <AscanlogDropdown />
@@ -33,8 +33,8 @@ const Ascanlog = () => {
             <AscanToggle />
           </div>
       </div>
-      <div className="h-[88%] border border-gray-700 parent-bg">
-        <AscanPloting chartRef={chartRef} />
+      <div className="h-[89%] rounded-2xl border border-gray-700 parent-bg">
+        <AscanPloting chartRef={chartRef}/>
       </div>
     </div>
   );

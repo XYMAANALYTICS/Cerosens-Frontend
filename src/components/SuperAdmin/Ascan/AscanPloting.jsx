@@ -22,6 +22,10 @@ import {
 } from "chart.js";
 import paramters from "../../../store/addparameter";
 import useDataStore from "../../../store/dataStore";
+import { useLocation } from "react-router-dom";
+import { MdOutlineRestartAlt } from "react-icons/md";
+import { FcCancel } from "react-icons/fc";
+import { FaThinkPeaks } from "react-icons/fa6";
 
 ChartJS.register(
   CategoryScale,
@@ -77,6 +81,8 @@ const AscanPloting = ({ chartRef }) => {
 
   const setState = useAdminStore((s) => s.setState);
   const SaveTags = useAdminStore((s) => s.SaveTags);
+    const DeleteTags = useAdminStore((s) => s.DeleteTags);
+
   const start = useAdminStore((s) => s.start);
   const stop = useAdminStore((s) => s.stop);
   const zoomKey = useAdminStore((s) => s.zoomKey);
@@ -95,14 +101,14 @@ const AscanPloting = ({ chartRef }) => {
   const w2thresholdNeg = useDataStore((s) => s.w2thresholdNeg);
   const w2thresholdPos = useDataStore((s) => s.w2thresholdPos);
   const window2Stop = useDataStore((s) => s.window2Stop);
+  const SubChildSidebar = useAdminStore((s) => s.SubChildSidebar);
+  const location = useLocation();
+  const resetparticular = useAdminStore((s) => s.resetparticular);
 
-  console.log("w2thresholdPos-",w2thresholdPos)
-
+  const currentpath = location.pathname;
   useEffect(() => {
     let intervalId;
-    // console.log("ascan_status=",ascan_status)
     if (ascan_status === true) {
-      // console.log("api is calling===",ascan_status)
       intervalId = setInterval(() => {
         setAscan("GetAscan");
       }, 2000);
@@ -112,7 +118,7 @@ const AscanPloting = ({ chartRef }) => {
       });
     }
     return () => intervalId && clearInterval(intervalId);
-  }, [ascan_status, setAscan, setState]);
+  }, [ascan_status, setAscan, setState, SubChildSidebar]);
 
   // console.log("ascan_status=",ascan_status)
   // 📊 Format ASCAN data
@@ -139,6 +145,7 @@ const AscanPloting = ({ chartRef }) => {
 
   // 🎯 Handle chart click (add/remove markers)
   const onChartClick = (event) => {
+    console.log("Onclicked....");
     if (!chartRef.current) return;
     const chart = chartRef.current;
 
@@ -167,6 +174,7 @@ const AscanPloting = ({ chartRef }) => {
     const positionX = meta.data[clickedIndex]?.x; // pixel from left
     const positionY = meta.data[clickedIndex]?.y; // pixel from top
 
+    console.log("markers.length=", markers.length);
     if (markers.length === 1) {
       setState({ SaveTags: true });
     }
@@ -188,12 +196,14 @@ const AscanPloting = ({ chartRef }) => {
       label: label,
       value: value,
     };
-    console.log("newMarker-", newMarker);
 
     setState({ markers: [...markers, newMarker] });
   };
 
   useEffect(() => {
+    if(markers.length === 0 ){
+      setMarkerPixels([])
+    }
     if (!chartRef.current || markers.length === 0) return;
 
     const chart = chartRef.current;
@@ -206,6 +216,7 @@ const AscanPloting = ({ chartRef }) => {
       yPixel: yScale.getPixelForValue(marker.value),
     }));
 
+    // console.log("markers is selected...(1)");
     setMarkerPixels(newPixels);
   }, [chartRef.current, markers, lineData, zoomKey]);
 
@@ -531,7 +542,7 @@ const AscanPloting = ({ chartRef }) => {
       window2Stop,
       window2Start,
       w2thresholdNeg,
-      w2thresholdPos
+      w2thresholdPos,
     ]
   );
 
@@ -544,148 +555,195 @@ const AscanPloting = ({ chartRef }) => {
       xPixel: xScale.getPixelForValue(marker.label),
       yPixel: yScale.getPixelForValue(marker.value),
     }));
+    // console.log("markers is selected...(1)");
 
     setMarkerPixels(newPixels);
   };
   // const hasAtSymbol = Ascan_Datas?.some(d => d.As && d.As.includes("@"))||null;
   // Ascan_Status_setState({Ascan_Status:hasAtSymbol});
-  // console.log("lineData pixels", lineData);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-[100%]">
       {lineData.datasets && lineData.datasets.length > 0 ? (
         <>
-          <div className="flex gap-1 p-1 h-[40%]">
-            {/* Window 1 */}
-            <div className="border p-3 rounded-lg bg-white shadow-sm w-[50%] h-[100%]">
-              <h2 className="font-semibold text-lg mb-2 text-center">
-                Window 1
-              </h2>
+          {currentpath === "/admin/Ascan" ? (
+            <div className="flex gap-1 p-1 h-[40%]">
+              {/* Window 1 */}
+              <div className="border p-3 rounded-lg bg-white shadow-sm w-[50%] h-[100%]">
+                <h2 className="font-semibold text-lg mb-2 text-center">
+                  Window 1
+                </h2>
 
-              <div className=" grid grid-cols-2 gap-1">
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Threshold + (V)</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={thresholdPos}
-                    step="0.01"
-                    onChange={(e) =>
-                      DatasetState({ thresholdPos: e.target.value })
-                    }
-                  />
+                <div className=" grid grid-cols-2 gap-1">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Threshold + (V)
+                    </label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={thresholdPos}
+                      step="0.01"
+                      onChange={(e) =>
+                        DatasetState({ thresholdPos: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Threshold – (V)
+                    </label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={thresholdNeg}
+                      step="0.01"
+                      onChange={(e) =>
+                        DatasetState({ thresholdNeg: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Window Start</label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={windowStart}
+                      step="0.001"
+                      onChange={(e) =>
+                        DatasetState({ windowStart: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Window Stop</label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={windowStop}
+                      step="0.001"
+                      onChange={(e) =>
+                        DatasetState({ windowStop: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
+              </div>
 
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Threshold – (V)</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={thresholdNeg}
-                    step="0.01"
-                    onChange={(e) =>
-                      DatasetState({ thresholdNeg: e.target.value })
-                    }
-                  />
-                </div>
+              {/* Window 2 */}
+              <div className="border p-3 rounded-lg w-[50%] h-[100%] bg-white shadow-sm">
+                <h2 className="font-semibold text-lg mb-2 text-center">
+                  Window 2
+                </h2>
 
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Window Start</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={windowStart}
-                    step="0.001"
-                    onChange={(e) =>
-                      DatasetState({ windowStart: e.target.value })
-                    }
-                  />
-                </div>
+                <div className="grid grid-cols-2 gap-1">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Threshold + (V)
+                    </label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={w2thresholdPos}
+                      step="0.01"
+                      onChange={(e) =>
+                        DatasetState({ w2thresholdPos: e.target.value })
+                      }
+                    />
+                  </div>
 
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Window Stop</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={windowStop}
-                    step="0.001"
-                    onChange={(e) =>
-                      DatasetState({ windowStop: e.target.value })
-                    }
-                  />
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">
+                      Threshold - (V)
+                    </label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={w2thresholdNeg}
+                      step="0.01"
+                      onChange={(e) =>
+                        DatasetState({ w2thresholdNeg: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Window Start</label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={window2Start}
+                      step="0.001"
+                      onChange={(e) =>
+                        DatasetState({ window2Start: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium">Window Stop</label>
+                    <input
+                      className="border px-2 py-1 rounded"
+                      type="number"
+                      value={window2Stop}
+                      step="0.001"
+                      onChange={(e) =>
+                        DatasetState({ window2Stop: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+          ) : (
+            <></>
+          )}
 
-            {/* Window 2 */}
-            <div className="border p-3 rounded-lg w-[50%] h-[100%] bg-white shadow-sm">
-              <h2 className="font-semibold text-lg mb-2 text-center">
-                Window 2
-              </h2>
-
-              <div className="grid grid-cols-2 gap-1">
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Threshold + (V)</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={w2thresholdPos}
-                    step="0.01"
-                    onChange={(e) =>
-                      DatasetState({ w2thresholdPos: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Threshold – (V)</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={w2thresholdNeg}
-                    step="0.01"
-                    onChange={(e) =>
-                      DatasetState({ w2thresholdNeg: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Window Start</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={window2Start}
-                    step="0.001"
-                    onChange={(e) =>
-                      DatasetState({ window2Start: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium">Window Stop</label>
-                  <input
-                    className="border px-2 py-1 rounded"
-                    type="number"
-                    value={window2Stop}
-                    step="0.001"
-                    onChange={(e) =>
-                      DatasetState({ window2Stop: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="h-[60%] w-[100%]">
+          <div
+            className={`relative ${
+              location.pathname === "/admin/Ascan" ? "h-[60%]" : "h-[100%]"
+            } w-full bg-white rounded-2xl`}
+          >
+            {/* Chart */}
             <Line
               ref={chartRef}
               data={lineData}
               options={lineOptions}
-              onClick={onChartClick}
-              height={200}
+              onClick={
+                currentpath === "/admin/Ascan" ? onChartClick : undefined
+              }
             />
+
+            {/* Right-side Button */}
+            <button
+              // onClick={handleChartAction}
+              className="absolute top-2 right-4 px-4 py-1 bg-red-600 text-white text-sm rounded-lg shadow hover:bg-red-700 transition hover:cursor-pointer"
+              onClick={() => {
+                if (chartRef.current) {
+                  chartRef.current.resetZoom();
+                  setAscan("StoreTags");
+                  setState((prev) => ({
+                    ...prev,
+                    zoomKey: prev.zoomKey + 1,
+                  }));
+                }
+              }}
+            >
+              <MdOutlineRestartAlt />
+            </button>
+            <button
+              // onClick={handleChartAction}
+              className="absolute flex gap-1 top-2 text-red-500 right-18 px-2 py-1 bg-red-200  text-sm rounded-lg shadow hover:bg-red-200 transition hover:cursor-pointer"
+              onClick={() => {
+                  setState({ DeleteTags: true })
+              }}
+            >
+              <FaThinkPeaks />
+              <FcCancel />
+            </button>
           </div>
 
           {SaveTags && (
@@ -697,7 +755,7 @@ const AscanPloting = ({ chartRef }) => {
                     className="px-2 border rounded-md border-green-400 text-green-400 hover:bg-green-400 hover:text-white hover-effect"
                     onClick={() => {
                       setAscan("StoreTags");
-                      setState({ SaveTags: true });
+                      setState({ SaveTags: false });
                     }}
                   >
                     Yes
@@ -706,6 +764,35 @@ const AscanPloting = ({ chartRef }) => {
                     className="px-2 border rounded-md border-red-400 text-red-400 hover:bg-red-400 hover:text-white hover-effect"
                     onClick={() => {
                       setState({ SaveTags: false });
+                    }}
+                  >
+                    No
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+           {DeleteTags && (
+            <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
+              <div className="bg-white p-4 rounded-xl shadow-lg flex flex-col items-center justify-center text-center">
+                <div className="mb-2">Do You Want to Delete the Settings?</div>
+                <div className="flex gap-2">
+                  <div
+                    className="px-2 border rounded-md border-green-400 text-green-400 hover:bg-green-400 hover:text-white hover-effect"
+                    onClick={() => {
+                      setAscan("StoreTags");
+                      resetparticular(),
+                      setState({ DeleteTags: false });
+
+                    }}
+                  >
+                    Yes
+                  </div>
+                  <div
+                    className="px-2 border rounded-md border-red-400 text-red-400 hover:bg-red-400 hover:text-white hover-effect"
+                    onClick={() => {
+                      setState({ DeleteTags: false });
                     }}
                   >
                     No
@@ -731,7 +818,7 @@ const AscanPloting = ({ chartRef }) => {
                 className="absolute bg-green-500 w-[50px] text-white text-[8px] font-medium px-2 py-1 rounded-lg shadow-md"
                 style={{
                   left: "50%",
-                  top: "-10px",
+                  top: "40px",
                   transform: "translate(-50%, -100%)",
                 }}
               >
