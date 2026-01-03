@@ -282,7 +282,7 @@ const useAdminStore = create((set, get) => ({
 
 
   setAscan: async (msg) => {
-    const { UserProjectName, ProcessName, markers, AscanLog, Ascan, SaveTags } =
+    const { UserProjectName, ProcessName, markers, AscanLog, DeleteTags, SaveTags } =
       get();
     // console.log("messages=",msg);
     try {
@@ -354,8 +354,11 @@ const useAdminStore = create((set, get) => ({
         }
       } else if (msg === "StoreTags") {
 
+        console.log("SaveTags=",SaveTags);
+        console.log("DeleteTags=",DeleteTags)
+
         if (SaveTags === true || DeleteTags === true) {
-                            console.log("markers=",ProcessName,ProcessName)
+          console.log("markers=",ProcessName,ProcessName)
 
           const res = await axiosInstance.get("/SetAscan", {
             params: {
