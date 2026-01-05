@@ -20,13 +20,13 @@ const Ascanlog = () => {
           <AscanlogDropdown />
           <AscanDownload />
 
-          <button
+          {/* <button
             className="border flex items-center justify-center rounded-xl p-2 gap-2 text-green-400"
             onClick={() => setWindowValue(1)}
           >
             <IoIosCloudDone className="" />
             Set
-          </button>
+          </button> */}
          
         </div>
          <div className="">

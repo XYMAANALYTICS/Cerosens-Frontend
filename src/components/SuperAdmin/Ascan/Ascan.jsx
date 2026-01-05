@@ -10,6 +10,7 @@ import { CiLock } from "react-icons/ci";
 import { SiTicktick } from "react-icons/si";
 import { MdOutlineCancel } from "react-icons/md";
 import AscanDownload from "./AscanDownload";
+import { IoIosCloudDone } from "react-icons/io";
 
 const Ascan = () => {
   const projectdata = useDataStore((s) => s.getprojectdata);
@@ -25,6 +26,7 @@ const Ascan = () => {
   const Msps = useAdminStore((s) => s.Msps);
   const start = useAdminStore((s) => s.start);
   const Stop = useAdminStore((s) => s.Stop);
+  const setWindowValue = useDataStore((s) => s.setWindowValue);
 
   const setSettingsDetails = useAdminStore((s) => s.setSettingsDetails);
   const DevicesetState = paramters((s) => s.setState);
@@ -141,6 +143,13 @@ const Ascan = () => {
           <div className="">
             <AscanDropdown />
           </div>
+          <button
+                      className="border flex items-center justify-center rounded-xl p-2 gap-2 text-green-400"
+                      onClick={() => setWindowValue(1)}
+                    >
+                      <IoIosCloudDone className="" />
+                      Set
+                    </button>
           {/* ))} */}
          
           <div
